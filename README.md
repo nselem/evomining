@@ -1,3 +1,5 @@
+# In contruction Docker Evomining using docker image:
+
 docker.ubuntu-apache-php-perl-mysql_client
 ========================================
 
