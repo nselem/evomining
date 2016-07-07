@@ -1,7 +1,7 @@
 # In contruction Docker Evomining using docker image:
 ========================================
 
-## 0 Insatll Docker engine
+## 0 Install Docker engine
 ## 1 Pull evomining image from DockerHub  
 ## 2 Run evomining image  
 
