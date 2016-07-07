@@ -1,4 +1,4 @@
-# In construction Docker Evomining using docker image:
+# In construction Evomining using docker image:
 ========================================
 ## EvoMining Installation guide
 
