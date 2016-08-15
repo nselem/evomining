@@ -45,7 +45,7 @@ RUN mkdir /opt/blast && curl ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+
  RUN mkdir /opt/muscle && tar -C /opt/muscle -xzvf /opt/muscle3.8.tar.gz && ln -s /opt/muscle/muscle3.8.31_i86linux64 /opt/muscle/muscle  
 ####___________________________________________________________________________________________________________________________________
 # Installing GBlocks
-RUN curl -SL http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_Linux64_0.91b.tar.Z | tar -xzC /opt && ln -s /opt/Gblocks_0.91b/Gblocks /usr/bin/Gblocks
+RUN curl -SL http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_Linux64_0.91b.tar.Z | tar -xzC /opt 
 ####___________________________________________________________________________________________________________________________________
 RUN apt-get install -y build-essential
 ## Instaling Quicktree
@@ -62,11 +62,12 @@ RUN mkdir /opt/nw && tar -C /opt/nw -xzvf /opt/newick-utils-1.6.tar.gz && cd /op
 # RUN git clone https://github.com/nselem/EvoDivMet
 # RUN mkdir /opt/CORASON
 
- ######### PATHS ENVIRONMENT
-ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/Gblocks:/opt/quicktree/quicktree_1.1/bin:/root/EvoDivMet/CORASON
-## Moving to myapp directory
-# RUN mkdir /usr/src/CORASON
-### Aqui puedo pasar GENOMES, query, RAST_IDs
-# COPY . /usr/src/CORASON
+RUN cpanm Statistics::Basic
+RUN chmod -R 777 /var/www/html
 
+ ######### PATHS ENVIRONMENT
+ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin
+
+COPY apache2.conf /etc/apache2/
+RUN service apache2 start
 CMD ["/var/www/run_apache.sh"]

@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+<title>The Saqqaq Genome Database (NCBI36)</title>
+<link rel="stylesheet" type="text/css" href="http://www.cbs.dtu.dk/special/ancientgenomes/saqqaq2.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<script language="JavaScript">
+function submitForm()
+{
+var f = document.forms["myForm"];
+f.submit();
+}
+</script>
+</head>
+<body align="center" onLoad="submitForm()">
+<a href="saqqaq.cgi"><h1 align="center">The Saqqaq Genome Database (NCBI36)</h1></a><br /><form method="post"http://www.cbs.dtu.dk/cgi-bin/saqqaq.cgi action="http://www.cbs.dtu.dk/cgi-bin/saqqaq.cgi" enctype="multipart/form-data" name ="myForm">
+<input value="search" name="op" type="hidden" /><input value="1:1..1000000" name="search" type="hidden" /><input value="1" name="chr" type="hidden" /><input value="1" name="start" type="hidden" /><input value="1000000" name="end" type="hidden" /><table><tr><td>Choose alternative output format: </td><td><select name="output" >
+<option value="table">Table with additional information</option>
+</select><td><input type="submit" name=".submit" value="Submit" /></td></td></tr></table></form><h4>Result</h4><div class="seq">     
+</div><br /><i>Note: A question mark ('?') at a position disignates that no genotype is called. IUPAC (Cornish-Bowden (1985) Nucl. Acids Res. 13: 3021-3030.) nucleic acid codes are used in case of heterozygosity (highlighted) at a given position:</i><br /><table align="center" border="0"><tr align="center" style="background-color:lightblue;"><th>code</th><th>genotype</th></tr><tr align="center" style="background-color:#F8F8F8;"><td>M</td><td>AC</td></tr><tr align="center" style="background-color:#E0E0E0;"><td>R</td><td>AG</td></tr><tr align="center" style="background-color:#F8F8F8;"><td>W</td><td>AT</td></tr><tr align="center" style="background-color:#E0E0E0;"><td>S</td><td>CG</td></tr><tr align="center" style="background-color:#F8F8F8;"><td>Y</td><td>CT</td></tr><tr align="center" style="background-color:#E0E0E0;"><td>K</td><td>GT</td></tr></table><br /><fieldset><legend>Download</legend><form method="post" action="/cgi-bin/saqqaq.cgi" enctype="multipart/form-data">
+<input value="search" name="op" type="hidden" /><input value="1:1..1000000" name="search" type="hidden" /><input value="1" name="chr" type="hidden" /><input value="1" name="start" type="hidden" /><input value="1000000" name="end" type="hidden" /><input value="download" name="opt" type="hidden" /><input type="submit" name=".submit" value="Download as text file" type="submit" /></fieldset></form><div align="center"><br /><br /><br /><hr style="width:100%;" />[ <a href="saqqaq.cgi">home</a> | <a href="http://www.ancientgenome.dk/download.php">download flat files</a> | <a href="http://www.ancientgenome.dk">ancientgenome.dk</a> ]	<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-11450238-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html></div>
