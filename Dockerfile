@@ -7,29 +7,20 @@ RUN echo "1.565.1" > .lts-version-number
 RUN apt-get update && apt-get install -y wget git curl zip vim
 RUN apt-get update && apt-get install -y apache2 php5 perl libapache2-mod-perl2 php5-mysql libdbd-mysql-perl libdatetime-format-builder-perl libemail-abstract-perl libemail-send-perl libemail-simple-perl libemail-mime-perl libtemplate-perl libmath-random-isaac-perl libgd-text-perl libgd-graph-perl libxml-twig-perl libchart-perl libnet-ldapapi-perl libtemplate-plugin-gd-perl  libfile-slurp-perl libhtml-scrubber-perl libhtml-formattext-withlinks-perl libjson-rpc-perl libjson-xs-perl libnet-ldap-perl libauthen-radius-perl libencode-detect-perl libfile-mimeinfo-perl libio-stringy-perl libdaemon-generic-perl
 
-
 RUN apt-get update && apt-get install -y php5-intl imagemagick
 RUN usermod -U www-data && chsh -s /bin/bash www-data
 
-COPY enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
-COPY run_apache.sh /var/www/
-RUN a2enmod rewrite cgi perl headers
 
 volume "/var/log"
-
-#USER www-data
-
-#VOLUME ["/var/www/html", "/var/log/apache2" ]
 ENV SERVER_NAME docker-apache-php
-
 # for main web interface:
 EXPOSE 80
 
-WORKDIR /var/www/html
 
 ## Installing perl module
 RUN apt-get install make && curl -L http://cpanmin.us | perl - App::cpanminus
 RUN cpanm SVG
+RUN cpanm Statistics::Basic
 
 ###____________________________________________
 
@@ -58,16 +49,21 @@ RUN wget -O /opt/newick-utils-1.6.tar.gz http://cegg.unige.ch/pub/newick-utils-1
 RUN mkdir /opt/nw && tar -C /opt/nw -xzvf /opt/newick-utils-1.6.tar.gz && cd /opt/nw/newick-utils-1.6 && cp src/nw_* /usr/local/bin
 
 #_________________________________________________________________________________________________
-## CORASON
-# RUN git clone https://github.com/nselem/EvoDivMet
-# RUN mkdir /opt/CORASON
 
-RUN cpanm Statistics::Basic
-RUN chmod -R 777 /var/www/html
 
  ######### PATHS ENVIRONMENT
 ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin
 
-COPY apache2.conf /etc/apache2/
+WORKDIR /var/www/
+RUN mkdir /var/www/html
+RUN chmod -R 777 /var/www/html
+
+## EvoMining
+RUN git clone https://github.com/nselem/EvoMining /var/www/html/
+RUN mv /var/www/html/EvoMining/enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
+RUN mv /var/www/html/EvoMining/apache2.conf /etc/apache2/conf-enabled/
+RUN a2enmod rewrite cgi perl headers
 RUN service apache2 start
-CMD ["/var/www/run_apache.sh"]
+
+
+#CMD ["/var/www/run_apache.sh"]
