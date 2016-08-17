@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Evomining</title>
+<!--TABS-->
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script>
+  $(function() {
+    $( "#tabs" ).tabs();
+  });
+  </script>
+<!--TABS-->
+<style type="text/css">
+@import url(css/style.css);
+</style>
+<script src="js/javascript.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="header">
+  <h1>Evomining</h1>
+  <br />
+  <h2>jQuery Sliding Panel Demonstration for NETTUTS</h2>
+</div>
+
+  <hr id="header_stripe"/>
+  <div id="page_container">
+  <div id="toppanel">
+    <div id="panel">
+      <div id="panel_contents"> </div>
+
+     <!--TABS-->
+     <div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">Testing</a></li>
+    <li><a href="#tabs-2">Add a genome</a></li>
+    <li><a href="#tabs-3">Add a pathway</a></li>
+  </ul>
+ <div id="tabs-1">
+  <form name="activa" action="/EvoMining/cgi-bin/heatplot.pl" method="post">
+	<div class="titulo">Homology Search</div>
+	<div class="subtitulo">Blast option:</div>
+	<div class="campo1">e-value:</div>
+    <div class="campo-1"><textarea style="width: 65px; height: 25px;" cols="1" rows="1" name="evalue">0.0001</textarea></div>
+    <div class="campo2">Minimum Score:</div>
+    <div class="campo2-2"><textarea style="width: 50px; height: 25px;" cols="1" rows="1" name="score">100</textarea></div>
+	<div class="boton"><button  value="Submit" name="Submit">SUBMIT</button></div>
+  </form>
+ </div>
+  <div id="tabs-2">
+    <p>Under construction</p>
+  </div>
+  <div id="tabs-3">
+    <p>Under construction</p>
+  </div>
+</div>
+     <!--TABS-->
+    </div>
+    <div class="panel_button" style="display: visible;"><img src="images/expand.png"  alt="expand"/> <a href="#">Start</a> </div>
+    <div class="panel_button" id="hide_button" style="display: none;"><img src="images/collapse.png" alt="collapse" /> <a href="#">Hide</a> </div>
+  </div>
+  <div id="content">
+    <p>EvoMining is an evolution-inspired NP genome mining strategy helpful in the identification of putative novel classes of molecules and biosynthetic systems. EvoMining is based on the identification of expansions on central metabolic enzyme families and their recruitment by NP biosynthetic pathways. 
+</p>
+    <p>EvoMining predicts novel biosynthetic pathways on microbial genomes using phylogenetic profiles and distances, gene context and tree topology of the expanded enzyme families with recruitments.</p>
+  </div>
+  <div id="footer">
+    <p></p>
+  </div>
+</div>
+</body>
+</html>

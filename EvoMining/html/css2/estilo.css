@@ -1,0 +1,104 @@
+@charset "UTF-8";
+#myModal .modal-dialog
+{
+  width: 1000px;/* your width */
+}
+#myModal2 .modal-dialog
+{
+  width: 1000px;/* your width */
+}
+
+#tabla table.table.table-bordered tbody tr td {
+	padding: 1px;
+	font-size: 10px;
+}
+#negro
+{
+	background-color: black;
+}
+table
+{
+	border: 1px solid #ddd;
+}
+/* CSS Document */
+
+#banner
+{
+	text-align: center;
+	background-image: url(../images2/fondo.png);
+	background-repeat: repeat-x;
+	padding-bottom: 20px;
+}
+#divcentro
+{
+	margin: 0, auto;
+}
+
+#rojo
+{
+	background-color: red;
+}
+#negro
+{
+	background-color: black;
+}
+#verde
+{
+	color: #aec244;
+}
+#gris
+{
+	color: #afb0b2;
+}
+
+#centrado
+{
+	text-align: center;
+}
+#derecha
+{
+	text-align: right;
+}
+
+#espacio
+{
+	padding-bottom: 20px;
+}
+#espacio2
+{
+	margin-bottom: 20px;
+}
+#espacios
+{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+#espacio-form
+{
+	padding-top: 60px;
+}
+#espacio-search
+{
+	margin-top: 50px;
+}
+#tabla 
+{
+    height: 100% !important;
+    overflow: scroll;
+}
+table .tabla td tr
+{
+	    padding: 2px !important;
+} 
+/*estilos subheader*/
+.bs-callout-warning {
+border-left-color: #f0ad4e;
+}
+.bs-callout {
+padding: 20px;
+margin: 20px 0;
+border: 1px solid #97d1ee;
+border-left-width: 5px;
+border-radius: 3px;
+}

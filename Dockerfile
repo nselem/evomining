@@ -63,6 +63,7 @@ RUN git clone https://github.com/nselem/EvoMining /var/www/html/
 RUN mv /var/www/html/EvoMining/enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
 RUN mv /var/www/html/EvoMining/apache2.conf /etc/apache2/conf-enabled/
 RUN a2enmod rewrite cgi perl headers
+RUN cp /opt/Gblocks_0.91b/GBlocks /var/www/html/EvoMining/cgi-bin/.
 RUN service apache2 start
 
 
