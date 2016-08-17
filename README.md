@@ -41,7 +41,7 @@ Note: if you have your apache on port 80, just switch your local port to 8080 or
   
 ### 3 View your results  
 On your browser go to:
-`http://localhost/EvoMining/html/evoMining/index.html`   
+`http://localhost/EvoMining/html/index.html`   
 
 ### 4 Setdatabases   
 You can change your data base, search for the steps at the wiki.  
