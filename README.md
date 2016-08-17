@@ -1,4 +1,4 @@
-# In construction Evomining using docker image:
+#Evomining using docker image:
 ========================================
 ## EvoMining Installation guide
 
@@ -26,7 +26,7 @@ Test your docker engine with the command:
 `$ docker run hello-world`  
 
 ###1 Download EvoMining images from DockerHub
-`$ docker pull nselem/newevomining:latest  `   (pending)  
+`$ docker pull nselem/newevomining:latest  `  
 
 #####Important  
 `docker pull ` may be slow depending on your internet connection, because nselem/evodivmet docker-image is being downloaded, its only this time won’t happen again.  
@@ -43,7 +43,7 @@ Note: if you have your apache on port 80, just switch your local port to 8080 or
 On your browser go to:
 `http://localhost/EvoMining/html/index.html`   
 
-### 4 Setdatabases   
+### 4 Setdatabases   (In construction)
 You can change your data base, search for the steps at the wiki.  
 `vim globals $GENOMES="los17"  `
 run reparaheader :walking:   
