@@ -26,38 +26,29 @@ Test your docker engine with the command:
 `$ docker run hello-world`  
 
 ###1 Download EvoMining images from DockerHub
-`$ docker pull nselem/evomining:latest  `   (pending)  
+`$ docker pull nselem/newevomining:latest  `   (pending)  
 
 #####Important  
 `docker pull ` may be slow depending on your internet connection, because nselem/evodivmet docker-image is being downloaded, its only this time won’t happen again.  
 
 ## 2 Run evomining image  
 
-`docker run -i -t -v /home/nelly/GIT/EvoMining/:/var/www/html -p 80:80 newevomining /bin/bash  `
-
-Database sample  
-los17  
+`docker run -i -t -v /home/mydir:/var/www/html -p 80:80 newevomining /bin/bash  `
 
 ### 2.1 Start apache  
 `sudo service apache2 start  `
+Note: if you have your apache on port 80, just switch your local port to 8080 or another in order that EvoMining can run. 
   
-### 2.2 Set apache time  
+### 3 View your results  
+On your browser go to:
+`http://localhost/EvoMining/html/evoMining/index.html`   
 
-on file: /etc/apache2/apache2.conf  
-change line  
-Timeout 300  
-to:   
-Timeout 6000000  
-  
-### 2.3 Setdatabases  
-
+### 4 Setdatabases   
+You can change your data base, search for the steps at the wiki.  
 `vim globals $GENOMES="los17"  `
 run reparaheader :walking:   
 `perl reparaHEADER.pl  `  
-On your browser go to:
-`http://localhost/EvoMining/html/evoMining/indexORIG.html`   
 
-Note: if you have your apache on port 80, just switch your local port to 8080 or another in order that EvoMining can run. 
 
 ### curl installation
 - `$ which curl`
