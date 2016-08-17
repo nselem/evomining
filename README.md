@@ -55,7 +55,7 @@ Timeout 6000000
 run reparaheader :walking:   
 `perl reparaHEADER.pl  `  
 On your browser go to:
-`http://localhost/html/evoMining/indexORIG.html`   
+`http://localhost/EvoMining/html/evoMining/indexORIG.html`   
 
 Note: if you have your apache on port 80, just switch your local port to 8080 or another in order that EvoMining can run. 
 
