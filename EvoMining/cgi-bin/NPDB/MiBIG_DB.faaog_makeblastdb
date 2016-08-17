@@ -1,1 +1,0 @@
-makeblastdb -in NPDB/MiBIG_DB.faa -dbtype prot -out NPDB/MiBIG_DB.faa.db
