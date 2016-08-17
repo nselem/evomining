@@ -3,7 +3,7 @@
 ## EvoMining Installation guide
 
 0. Install docker engine   
-1. Download nselem/evoMining docker-image  (pending)  
+1. Download nselem/newevomining 
 2. Run EvoMining    
 
 Follow the steps, and type the commands into your terminal, do not type $.  
