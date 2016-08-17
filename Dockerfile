@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y apache2 php5 perl libapache2-mod-perl2 
 
 RUN apt-get update && apt-get install -y php5-intl imagemagick
 RUN usermod -U www-data && chsh -s /bin/bash www-data
-
+RUN a2enmod rewrite cgi perl headers
 
 volume "/var/log"
 ENV SERVER_NAME docker-apache-php
@@ -51,20 +51,20 @@ RUN mkdir /opt/nw && tar -C /opt/nw -xzvf /opt/newick-utils-1.6.tar.gz && cd /op
 #_________________________________________________________________________________________________
 
 
- ######### PATHS ENVIRONMENT
-ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin
 
 WORKDIR /var/www/
-RUN mkdir /var/www/html
+#RUN mkdir /var/www/html
 RUN chmod -R 777 /var/www/html
 
 ## EvoMining
-RUN git clone https://github.com/nselem/EvoMining /var/www/html/
+ ######### PATHS ENVIRONMENT
+ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin
+RUN git clone https://github.com/nselem/EvoMining /var/www/html/EvoMining
+RUN chmod -R 777 /var/www/html/EvoMining
 RUN mv /var/www/html/EvoMining/enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
-RUN mv /var/www/html/EvoMining/apache2.conf /etc/apache2/conf-enabled/
-RUN a2enmod rewrite cgi perl headers
-RUN cp /opt/Gblocks_0.91b/GBlocks /var/www/html/EvoMining/cgi-bin/.
+RUN mv /var/www/html/EvoMining/apache2.conf /etc/apache2/
 RUN service apache2 start
 
+RUN cp /opt/Gblocks_0.91b/Gblocks /var/www/html/EvoMining/cgi-bin/.
 
 #CMD ["/var/www/run_apache.sh"]
