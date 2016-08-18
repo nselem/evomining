@@ -33,7 +33,7 @@ Test your docker engine with the command:
 
 ## 2 Run evomining image  
 
-`docker run -i -t -p 80:80 newevomining /bin/bash  `
+`docker run -i -t -p 80:80 nselem/newevomining /bin/bash  `
 
 ### 2.1 Start apache  
 `sudo service apache2 start  `
