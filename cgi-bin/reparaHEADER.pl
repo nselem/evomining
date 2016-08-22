@@ -322,8 +322,9 @@ sub bbhAfterUniq {
 
      $llave2="$sele[1]&&$sele[0]";
      if (exists $hashBBH{$llave2}){
-      print BBH "$a1[1] -> $sele[1]\t$sele[0]\n";
+      
       @a1=split(/\|/,$sele[0]);
+      print BBH "$a1[1] -> $sele[1]\t$sele[0]\n";
       $hashMETCENTRAL{$a1[1]}="$sele[1]\t$sele[0]\n";
      }
      $original++;

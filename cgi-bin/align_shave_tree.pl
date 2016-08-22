@@ -243,7 +243,7 @@ print qq |<div><td >tree</td></div>|;
     foreach my $xc (@dat){
         if($array2[0] eq $xc){
           $onlyD="distance.$xc.only";
-          open(XT, "$onlyD") or die $onlyD;
+open(XT, "/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$onlyD") or die "/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree, $onlyD $!";
           
 	  while($line=<XT>){
               chomp($line);
@@ -285,7 +285,7 @@ print qq |<div><td >tree</td></div>|;
 	    } 
 	    print qq |</table>|;
 	    print qq |</td>|;
-	   print qq |<div><td ><a href="http://localhost/EvoMining/cgi-bin/color_tree.pl?$array2[0]&&$outdir" target="_blank">check tree</a><br><a href="http://localhost/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$array2[0].tree" target="_blank"> Download newick_tree</a></td></div>|;
+	   print qq |<div><td ><a href="color_tree.pl?$array2[0]&&$outdir" target="_blank">check tree</a><br>" target="_blank"> </td></div>|;
            #print qq |<div><td ><a href="http://148.247.230.39/cgi-bin/newevomining/tree2_2TOTALexecORIG.pl?$array2[0]&&$outdir" target="_blank">check tree</a><br><a href="http://10.10.100.156/newevomining/$outdir/blast/seqf/tree/$array2[0].tree" target="_blank"> Download newick_tree</a></td></div>|;
            #print qq |<div class="campo2"><td><a href="http://148.247.230.39/cgi-bin/newevomining/tree.pl?$array2[0]" target="_blank">check tree</a></td></div>|;
           print qq |</tr>|;
@@ -427,9 +427,9 @@ sub findDistance2 {
    
   @NPs=split (/\,/,$hashNUM_NP{$numerin});
   #########weekend######### 
-  open (SI,">../../si.log");
+ # open (SI,">../../si.log");
  #########weekend#########  
- print SI "inicio $dis, $numerin\n";
+# print SI "inicio $dis, $numerin\n";
   foreach my $np (@NPs){
     $hashNPS{$np}=1;
   #########weekend######### 
@@ -442,7 +442,7 @@ sub findDistance2 {
     system "echo ==== >>/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/distance.$numerin.only1";
   }
  #########weekend######### 
-  close SI;
+ # close SI;
    $seccion=0;
    $colorSeccion=0;
  #########weekend#########

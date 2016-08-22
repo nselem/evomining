@@ -425,7 +425,6 @@ system "cat $pidfecha/NewFASTASparaNP/$tempor.fasta $x.fasta_ExpandedVsNp.blast.
 #$claveee="si llegaaaaaaaa";
 close CONCAT;
 close CONCATOUT;
-open (MAMA, ">mama.log")or die $!;
 #print "<h1>Done...ultimo</h1>"; 
 #print "Content-type: text/html\n\n";
 print qq| <form method="post" action="align_shave_tree.pl" name="forma"> |;
@@ -434,7 +433,6 @@ print qq |<td></td>|;
 print qq |<div class="subtitulo"><td>Central</td></div>|;
 print qq |<div class="subtitulo"><td>Natural Products</td></div>|;
 foreach my $x (@mostrar){
-#print MAMA "$x\n";
 @PREarray =split("===",$x);
 @array =split("---",$PREarray[1]);
 #$array[1] =~ s/_\d+//g;
@@ -442,7 +440,6 @@ print qq |<tr>|;
 #$clave="clave_$PREarray[0]";#$hashNUM{$array[0]}";
 $clave="clave_$PREarray[0]";#$hashNUM{$array[0]}";
 
-print MAMA "$clave\n";
 #print qq| <input type="hidden" name="$clave" value="$clave">|;
 print qq |<td><input type="checkbox" name="$clave" checked> </td>|;
 
