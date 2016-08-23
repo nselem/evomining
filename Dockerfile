@@ -66,5 +66,6 @@ RUN mv /var/www/html/EvoMining/apache2.conf /etc/apache2/
 RUN service apache2 start
 
 RUN cp /opt/Gblocks_0.91b/Gblocks /var/www/html/EvoMining/cgi-bin/.
-
+RUN cpanm IO::Tee
+#COPY . /var/www/html
 #CMD ["/var/www/run_apache.sh"]

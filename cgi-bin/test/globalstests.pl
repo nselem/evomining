@@ -43,6 +43,8 @@ $NP_DB="MiBIG_DB.faa"; 	#evomBlastNp2.0ORIG.pl
 #$NP_DB="susanaNP.faa"; 	#evomBlastNp2.0ORIG.pl
 
 #$NP_DB="MiBIG_DBplusPAU.faa";
+#-------------------------------------------------------------------------------
+ $TFM = "$OUTPUT_PATH/hashMETCENTRAL$GENOMES.db" ; #bbh.pl
  
 #-----------------Cluster finder and AntiSmash----------------------------------
 
@@ -55,5 +57,3 @@ $OUTPUT_PATH="/var/www/html/EvoMining/exchange/$VIA_MET\_$NP_DB\_$GENOMES";
 $TFM1A = "$OUTPUT_PATH/hashOrdenNombres1_$GENOMES.db" ;#evom-0-3ORIG.pl
 $TFM2A = "$OUTPUT_PATH/hashOrdenNombres2_$GENOMES.db" ;#evom-0-3ORIG.pl
 $TFM3A = "$OUTPUT_PATH/hashOrdenNombres3_$GENOMES.db" ;#evom-0-3ORIG.pl
-#-------------------------------------------------------------------------------
- $TFM = "$OUTPUT_PATH/hashMETCENTRAL$GENOMES.db" ; #bbh.pl
