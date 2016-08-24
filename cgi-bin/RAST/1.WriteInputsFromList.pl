@@ -14,7 +14,7 @@ open (ERROR, ">Error") or die $!;
 #print "$ARGV[0]\n";
 
 #print "0:$div[0], 1:$div[1]\n";
-my $apacheHTMLpath="/var/www/html/EvoMining/html";
+my $apacheHTMLpath="/var/www/html/EvoMining/exchange";
 my $Folder=$ARGV[0];
 chomp($Folder);
 $Folder =~ s/\r|\s//g;

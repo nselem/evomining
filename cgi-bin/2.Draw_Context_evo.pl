@@ -10,40 +10,34 @@
 ####################################################################3
 ############### set canvas 
 
- #my @div=split(/\|/,$ARGV[0]);
- #print "0:$div[0], 1:$div[1]\n";
- my $Folder=$ARGV[0];
-$Folder =~ s/\r|\s//g;
-chomp($Folder);
- my $apacheHTMLpath="/var/www/html/EvoMining/exchange";
-my $inputs="*.input";
+#my $file=$ARGV[0]; ##uncoment for read file by file
+#print "$file\n";
 
-my @CLUSTERS=`ls $apacheHTMLpath/$Folder/$inputs`; 	## Read all input Uncomment to read all
-my $nClust=scalar @CLUSTERS; 	#number of cluster (until now one per organism)
-				#3 Used to draw lines
-my $w=800;  			## Size of the window
-my $t=10; 			##Traslation factor horizontal
-#if(!$ARGV[1]){$t=20;} 		##If there is not tree, there is not translation
-my $tv=0; 			##Translation factor Vertical
-my $s=16.3; 			#Vertical Separation factor
-my $h=100*($nClust); 		# 100 of heigth for draw each organisms
-my $text=1; 			##Yes NO organism name
-my $grueso=16.0;		## Grosor de las flechas
+#my @CLUSTERS;
+#push(@CLUSTERS,$file);
+
+my @CLUSTERS=qx/ls *.input/; ## Read all input Uncomment to read all
+
+my $nClust=scalar @CLUSTERS; #number of cluster (until now one per organism)
+		#3 Used to draw lines
+my $w=800;  ## Size of the window
+my $t=1100; ##Traslation factor horizontal
+	if(!$ARGV[1]){$t=20;} ##If there is not tree, there is not translation
+my $tv=0; ##Translation factor VErtical
+my $s=16.3; #Vertical Separation factor
+my $h=100*($nClust); # 100 of heigth for draw each organisms
+my $text=1; ##Yes NO organism name
+my $grueso=16.0;## Grosor de las flechas
 my %ColorNames=Fill_Colors();
 my $cutleft=0;
     # create an SVG object with a size of 40x40 pixels
-my $svg = SVG->new(  	
-			width  => 1000,
-			height => $h,
-			onload=>'Init(evt)',
-			onmousemove=>' GetTrueCoords(evt); 
-			ShowTooltip(evt, true)',
-   			onmouseout=>'ShowTooltip(evt, false)'
-			);
+my $svg = SVG->new(  width  => 1000,height => $h,
+		onload=>'Init(evt)',
+		onmousemove=>' GetTrueCoords(evt); 
+		ShowTooltip(evt, true)',
+   		onmouseout=>'ShowTooltip(evt, false)');
 my $tag = $svg->script(-type=>"text/ecmascript");
 
-my $pwd=`pwd`;
-#$svg->text( x  => 100, y  => 20)->cdata("$pwd"); 
 
 #########################################################
 ######## Main 
@@ -61,15 +55,12 @@ Draw(\@CLUSTERS,$s,$t,$tv,$w,$cutleft,$grueso,\%ColorNames);
 #####################################################################
 ##Html output (Sending files to firefox
 #####################################################################
-
-open (OUT, ">$apacheHTMLpath/$Folder/Contextos.svg") or die "|$!--$apacheHTMLpath/$Folder|";
-
+open (OUT, ">$file.svg") or die $!;
     # now render the SVG object, implicitly use svg namespace
     print OUT $svg->xmlify;
 close OUT;
-`perl -p -i -e 'if(/\<polygon/)\{s/title=\"/\>\n\<title\>/g;if(m{\/\>\$})\{s{\" \/\>}{\<\/title\>\<\/polygon\>};\}\}else\{if((!/^\t/) and m{\/\>})\{s{\" \/>}{<\/title><\/polygon>};\}\}' $apacheHTMLpath/$Folder/Contextos.svg`;
 #system "firefox $file.svg";
- #`rm $apacheHTMLpath/$Folder/*.input`;
+
 ##################################################################
 ###    subs ######################################################
 
@@ -77,6 +68,7 @@ close OUT;
 
 
 sub Draw{
+   
 	my ($refCLUSTERS,$s,$t,$tv,$w,$cutleft,$grueso,$refColorNames)=@_;
 	my @YCOORD;
 	my %CONTEXTS;
@@ -85,14 +77,16 @@ sub Draw{
 	##In one svg object I have accumulated all clusters
 	##May be for the function visualization we may use more than one
 	@YCOORD=set_lines($size);
-	# add lines
+# add lines
 	for (my $i=0;$i<$size;$i++){
    		line($s,$t,$tv,$i,$w,$cutleft,\@YCOORD);    
- 		}
-		# add context
-		drawContexts($s,$t,$tv,$grueso,\%CONTEXTS,$w,\%ColorNames,$cutleft,\@YCOORD);
+ 	}
+
+
+# add context
+	drawContexts($s,$t,$tv,$grueso,\%CONTEXTS,$w,\%ColorNames,$cutleft,\@YCOORD);
 		#Need to add in inputs YCOOR (its used in line sub)
-	}
+}
 
 #_____________________________________________________________________________________________________
 
@@ -297,12 +291,9 @@ my $cont_number=0;
 		####### Get the orgnism NAme	
 		my $orgName=$refCONTEXTS->{$key}[4]; 
 		print "####################\n$orgName\n###########################\n";
-		if ($text!=0){	
-		##	side	$svg->text( x  => 10+$t+$w, y  => $refYCOORD->[$cont_number-1]+$tv)->cdata("$orgName ;"); }
-			my @sp=split(/\./,$refCONTEXTS->{$key}[6]);
-			my $gen=$sp[-1];
-			$svg->text( x  => 10+$t, y  => $refYCOORD->[$cont_number-1]+$tv-20)->cdata("$orgName    Gen:$gen"); 
-			} ##up rihgth
+		if ($text!=0){
+##	side	$svg->text( x  => 10+$t+$w, y  => $refYCOORD->[$cont_number-1]+$tv)->cdata("$orgName"); }
+$svg->text( x  => 10+$t, y  => $refYCOORD->[$cont_number-1]+$tv-20)->cdata("$orgName"); } ##up rihgth
 		####################################################################
 
 		for (my $i=0;$i<@{$refCONTEXTS->{$key}}/7;$i++){
@@ -314,7 +305,6 @@ my $cont_number=0;
 			my $color=$refCONTEXTS->{$key}[7*$i+3];
 			my $func=$refCONTEXTS->{$key}[7*$i+5];
 			my $id_peg=$refCONTEXTS->{$key}[7*$i+6];
-  
 
 			print "Key Start $start->$s1, stop $stop->$e1, dir $dir, color $refColorNames->{$color%20} \n";
 			if($dir eq '+'){
@@ -397,9 +387,17 @@ sub Fill_Colors{
 sub set_lines{
 	my $size=shift;
 	my @YCOORD;
+	my $file="";
+	if ($ARGV[1]){$file= $ARGV[1]; }
+	##
+	if($file){
+		@YCOORD=readTree($file);
+		}
+	else{ 
 		for (my $i=0; $i<$size;$i++){
 			$YCOORD[$i]=50+50*$i;
 			}
+		}
 	return @YCOORD;		
 	}
 #__________________________________________________________________
@@ -613,6 +611,7 @@ sub fillColor{
 
 	return $color1,$color2,$color3;
 	}
+
 
 
 

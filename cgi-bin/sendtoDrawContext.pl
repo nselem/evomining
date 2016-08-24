@@ -1,11 +1,14 @@
 #!/usr/bin/perl
+
 ############ Este es el formuario 
 use CGI::Carp qw(fatalsToBrowser);
 use CGI;
+
 my %Input;
 my $cad;
 my $query = new CGI;
 my $idConcat= '';
+
 print $query->header,
       $query->start_html(-style => {-src => '/EvoMining/html/css/tabla.css'} );
 my @pairs = $query->param;
@@ -13,7 +16,6 @@ my @pairs = $query->param;
 foreach my $pair(@pairs){
  	$Input{$pair} = $query->param($pair);
          $cad="$cad./$pair/|$Input{$pair}|";
-        
 	}	
 $Input{'keywords'}=~ s/ /_/g;
 
@@ -41,7 +43,7 @@ if($datas[3] ne ''){
 print qq |
 <html>
  <head>
-  <title>Conteeeeextos evoMining</title>
+  <title>Contextos evoMining</title>
  </head>
  
  <body>
@@ -55,6 +57,7 @@ Choose genes by cliking on its names</p>
   </body>
 </html>
 |;
+
 ## Para mensajes inseretar en html
 #<br>$filee Entorno <br>Input $Input{'keywords'}<br>
 #<center><p>Select genomic context *$Input{'keywords'}*:<br>Enter the genes that you wish to see separated by spaces.</p> 

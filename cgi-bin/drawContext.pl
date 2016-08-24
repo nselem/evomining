@@ -8,7 +8,8 @@ my $query = new CGI;
 print $query->header,
       $query->start_html(-style => {-src => '/EvoMining/html/css/tabla.css'} );
 my @pairs = $query->param;
-my $apacheHTMLpath="/EvoMining/html";
+
+my $apacheHTMLpath="/EvoMining/exchange";
 foreach my $pair(@pairs){
  	$Input{$pair} = $query->param($pair);
          #$cad="$cad./$pair/|$Input{$pair}|";

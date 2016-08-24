@@ -13,24 +13,23 @@ use globals;
 use Fcntl ; use DB_File ; $tipoDB = "DB_File" ; $RWC = O_CREAT|O_RDWR
 ;
 ############################## def-SUB  ################################
-my $tfm = "mi_hashNombrePorNum.db" ;	
 my %Input;
 my $query = new CGI;
 
-$apacheCGIpath=$APACHE_CGI_PATH; #from globals
+
+
+open (LOG, "$OUTPUT_PATH/EvoMining.log") or die "$!";
+close LOG;
+
+
 my $via_met=$VIA_MET; # From globals
 my $np_db=$NP_DB;	#From globals
-$boolnp_db=$boolNP_DB;   #From globals
-open(LOGMBDB, ">NPDB/$np_db\log_makeblastdb")or die $!;
-if($boolnp_db ==1){
-`/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db`;
-print LOGMBDB "makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db";
 
-}
-
+my $tfm = "$OUTPUT_PATH/mi_hashNombrePorNum.db" ;	
 $hand = tie my %NombresPorNum, $tipoDB , "$tfm" , $RWC , 0644 ;
 print "$! \nerror tie para $tfm \n" if ($hand eq "");
-my $tfm2 = "mi_hashNUMVia.db" ;
+
+my $tfm2 = "$OUTPUT_PATH/mi_hashNUMVia.db" ;
 $hand2 = tie my %hashNUMVia, $tipoDB , "$tfm2" , 0 , 0644 ;
 print "$! \nerror tie para $tfm2 \n" if ($hand2 eq "");
 
@@ -41,8 +40,32 @@ my @pairs = $query->param;
 foreach my $pair(@pairs){
 $Input{$pair} = $query->param($pair);
 }
-($eval,$score2,$pidfecha)=recepcion_de_archivo(); #Iniciar la recepcion del archivo
-system "touch $pidfecha/prueba$pidfecha";
+
+
+############### Recovering previous session ##########################
+my $prev_heat=`grep 'Heatplot' $OUTPUT_PATH/EvoMining.log`;  ##Heatplot done
+my $prev_np=`grep 'np_hits_from_cp' $OUTPUT_PATH/EvoMining.log`; ##np done
+
+if ($prev_heat){
+#	print "Previously done $prev_heat ";
+#	print "Previously done $prev_np ";
+	}
+else {
+	print qq|<meta http-equiv="Refresh" content="0;url=../html/index.html" >|;
+	exit;
+}
+
+if(!$prev_np){
+`/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db`;
+}
+####################################################################################
+my $oldid;
+($eval,$score2,$oldid)=recepcion_de_archivo(); #Iniciar la recepcion del archivo
+
+#print "Im here 1:$eval 2:$score2 3:$OUTPUT_PATH!";
+#exit;
+
+system "touch $OUTPUT_PATH/prueba$OUTPUT_PATH";
 $hashothernames{'enolase2'}="enolase";
 $hashothernames{'enolase1'}="enolase";
 $hashothernames{'enolase4'}="enolase";
@@ -112,6 +135,8 @@ print qq |
 |;
 #------------ guarda hash----------------------
 #print "Content-type: text/html\n\n";
+system "ls $OUTPUT_PATH/FASTASparaNP > $OUTPUT_PATH/ls.FASTANP";
+
 open (VIAS, "PasosBioSin/$via_met")or die $!;
 open (VIASOUT, ">PasosBioSin/viasout") or die $!;
 #open (VIAS, "/var/www/newevomining/PasosBioSin/tRAPs_EvoMining.fa");
@@ -134,19 +159,20 @@ chomp;
 #----------------prepara blast Vs NP---------------------------
 ####weekend# en este caso se tiene que corregir que en pasos anteriores se generaron archivos vacios###
 ####weekend#
-system "ls $pidfecha/FASTASparaNP > $pidfecha/ls.FASTANP";
+system "ls $OUTPUT_PATH/FASTASparaNP > $OUTPUT_PATH/ls.FASTANP";
 
 #print "<h1>Blast  Central Met./NP VS Genome DB...</h1>";
 
 #system "mkdir NewFASTASparaNP";
+if(!$prev_np){
 
-open (BNP, "$pidfecha/ls.FASTANP") or die $!;
+open (BNP, "$OUTPUT_PATH/ls.FASTANP") or die $!;
 while (<BNP>){
 chomp;
  ##########cuenta y saca secuencias corts y largas####################
-  open(OUTFASTA, ">$pidfecha/NewFASTASparaNP/$_")or die $!;
+  open(OUTFASTA, ">$OUTPUT_PATH/NewFASTASparaNP/$_")or die $!;
 
- open(TAM, "$pidfecha/FASTASparaNP/$_") or die $!;
+ open(TAM, "$OUTPUT_PATH/FASTASparaNP/$_") or die $!;
   $contDentro=0;
   $contfuera=0;
   $contfueraabajo=0;
@@ -257,15 +283,16 @@ chomp;
  
  ##########FIN cuenta y saca secuencias corts y largas####################
 
-#system "touch $pidfecha/prueba0";
+#system "touch $OUTPUT_PATH/prueba0";
 ##################weekend#####################
 ## version con todos##
 ####weekend#
- $blast=`/opt/blast/bin/blastp -db NPDB/$np_db.db -query $pidfecha/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out $pidfecha/blast/$_\_ExpandedVsNp.blast`;#" or die "EERROOOR:$?,$!,%d, %s coredump";
- #my $returnCode = system( $systemCommand );
+       $blast=`/opt/blast/bin/blastp -db NPDB/$np_db.db -query $OUTPUT_PATH/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out $OUTPUT_PATH/blast/$_\_ExpandedVsNp.blast`;#" or die "EERROOOR:$?,$!,%d, %s coredump";
+} 
+#my $returnCode = system( $systemCommand );
 
   
-  #system "touch $pidfecha/prueba1";
+  #system "touch $OUTPUT_PATH/prueba1";
 
 ### version solo con resaltados en rojo en el heatplot##system "/opt/ncbi-blast-2.2.28+/bin/blastp -db /var/www/newevomining/NPDB/NP_DB_NOVEMBER2014clean.db -query /var/www/newevomining/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out /var/www/newevomining/blast/$_\_ExpandedVsNp.blast";
 ########we######system "/opt/ncbi-blast-2.2.28+/bin/blastp -db /var/www/newevomining/NPDB/NATURAL_PRODUCTS_DB3.db -query /var/www/newevomining/FASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out /var/www/newevomining/blast/$_\_ExpandedVsNp.blast";
@@ -277,11 +304,11 @@ chomp;
 close BNP;
 #print "<h1>Done...</h1>"; ]
 
-system "touch $pidfecha/prueba3";
+system "touch $OUTPUT_PATH/prueba3";
 #----------------------------- filtra por score------------------------
-system "ls $pidfecha/blast/*_ExpandedVsNp.blast > $pidfecha/ls.ExpandedVsNp.blast";
+system "ls $OUTPUT_PATH/blast/*_ExpandedVsNp.blast > $OUTPUT_PATH/ls.ExpandedVsNp.blast";
 
-open (EXPPP, "$pidfecha/ls.ExpandedVsNp.blast") or die $!;
+open (EXPPP, "$OUTPUT_PATH/ls.ExpandedVsNp.blast") or die $!;
 while(<EXPPP>){
 chomp;
   open(CUUOUT, ">$_.2")or die $!;
@@ -301,8 +328,8 @@ chomp;
 close EXPPP;
 #----------------------end filtra por score--------------------------
 
-system "ls $pidfecha/blast/*_ExpandedVsNp.blast.2 > $pidfecha/ls.ExpandedVsNp.blast2";
-open (EXP, "$pidfecha/ls.ExpandedVsNp.blast2") or die $!;
+system "ls $OUTPUT_PATH/blast/*_ExpandedVsNp.blast.2 > $OUTPUT_PATH/ls.ExpandedVsNp.blast2";
+open (EXP, "$OUTPUT_PATH/ls.ExpandedVsNp.blast2") or die $!;
 while(<EXP>){
 chomp;
 #print "<h1>cat $_ |cut -f2 |sort -u >$_.recruitedUniq</h1>";
@@ -313,16 +340,16 @@ chomp;
    }
 }
 close EXP;
-system "ls $pidfecha/blast/*.recruitedUniq > $pidfecha/ls.recruitedUniq ";
+system "ls $OUTPUT_PATH/blast/*.recruitedUniq > $OUTPUT_PATH/ls.recruitedUniq ";
 
-open (REC, "$pidfecha/ls.recruitedUniq") or die $!;
-open (RECPR, ">$pidfecha/hash.log") or die $!;
+open (REC, "$OUTPUT_PATH/ls.recruitedUniq") or die $!;
+open (RECPR, ">$OUTPUT_PATH/hash.log") or die $!;
 
 while(<REC>){
 chomp;
  open(OU,"$_")or die $!;
  $sin=$_;
- $sin =~ s/$pidfecha\/blast\///g;
+ $sin =~ s/$OUTPUT_PATH\/blast\///g;
  $sin =~ s/\.fasta_ExpandedVsNp\.blast\.2\.recruitedUniq//g;
    while($line=<OU>){
    chomp($line);
@@ -392,12 +419,12 @@ close REC;
 foreach my $x (@nom){
 #system "touch $x.nananaaaaaa";
 $tempor= $x;
-$tempor =~ s/$pidfecha\/blast\///;
+$tempor =~ s/$OUTPUT_PATH\/blast\///;
 #########weekend######
 
 ## version recortados
 ###weekend
-system "cat $pidfecha/NewFASTASparaNP/$tempor.fasta $x.fasta_ExpandedVsNp.blast.2.recruitedUniq.fasta> $x.concat.fasta";
+system "cat $OUTPUT_PATH/NewFASTASparaNP/$tempor.fasta $x.fasta_ExpandedVsNp.blast.2.recruitedUniq.fasta> $x.concat.fasta";
 #version todos###system "cat /var/www/newevomining/FASTASparaNP/$tempor.fasta $x.fasta_ExpandedVsNp.blast.2.recruitedUniq.fasta> $x.preconcat.fasta";
 #open (CONCAT, "$x.preconcat.fasta");
 #open (CONCATOUT, ">$x.concat.fasta");
@@ -425,6 +452,7 @@ system "cat $pidfecha/NewFASTASparaNP/$tempor.fasta $x.fasta_ExpandedVsNp.blast.
 #$claveee="si llegaaaaaaaa";
 close CONCAT;
 close CONCATOUT;
+open (MAMA, ">mama.log")or die $!;
 #print "<h1>Done...ultimo</h1>"; 
 #print "Content-type: text/html\n\n";
 print qq| <form method="post" action="align_shave_tree.pl" name="forma"> |;
@@ -433,6 +461,7 @@ print qq |<td></td>|;
 print qq |<div class="subtitulo"><td>Central</td></div>|;
 print qq |<div class="subtitulo"><td>Natural Products</td></div>|;
 foreach my $x (@mostrar){
+#print MAMA "$x\n";
 @PREarray =split("===",$x);
 @array =split("---",$PREarray[1]);
 #$array[1] =~ s/_\d+//g;
@@ -440,6 +469,7 @@ print qq |<tr>|;
 #$clave="clave_$PREarray[0]";#$hashNUM{$array[0]}";
 $clave="clave_$PREarray[0]";#$hashNUM{$array[0]}";
 
+print MAMA "$clave\n";
 #print qq| <input type="hidden" name="$clave" value="$clave">|;
 print qq |<td><input type="checkbox" name="$clave" checked> </td>|;
 
@@ -450,7 +480,7 @@ $array[1]=~ s/\,/ \,/g;
 print qq |<div ><td width="40%">$array[1]</td></div>|;
 print qq |</tr>|;
 }
-print qq |<input type="hidden" value="$pidfecha" name="pidfecha" >|;
+print qq |<input type="hidden" value="$OUTPUT_PATH" name="OUTPUT_PATH" >|;
 print qq |</table>|;
 print qq| <table>|;
 print qq |
@@ -467,14 +497,18 @@ print qq| </form> |;
 untie %NombresPorNum;
 #exit(1);
 
-######################################################
+open (LOG, ">>$OUTPUT_PATH/EvoMining.log") or die "$!";
+ print "np_hits_from_cp\DONE\n";
+close LOG;
+
+#####################################################
 # funciones para upload
 #######################################################
 sub recepcion_de_archivo{
 
 my $evalue = $Input{'evalue'};
 my $score1 = $Input{'score'};
-my $PIDfecha = $Input{'pidfecha'};
+my $PIDfecha = $Input{'OUTPUT_PATH'};
 #my $nombre_en_servidor = $Input{'archivo'};
 
 $evalue =~ s/ /_/gi;

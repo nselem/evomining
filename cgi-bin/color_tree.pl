@@ -37,7 +37,7 @@ print $query->header,
 $prenumFile=$ENV{'QUERY_STRING'};
 @arraynumFile=split(/&&/,$prenumFile);
 $numFile=$arraynumFile[0];
-$outdir=$arraynumFile[1];
+$OUTPUT_PATH=$arraynumFile[1];
 ########################ANTISMASH###################################
 
 #@filesanti=`ls $apacheCGIpath/blast/seqf/tree/antismashPAblo/`;
@@ -75,14 +75,14 @@ close NP;
 
 #--------------------FIN de indexado de NP-------------------------------
 
-#system "cp $apacheCGIpath/$outdir/blast/seqf/tree/ornament.$numFile $apacheCGIpath/$outdir/blast/seqf/tree/ornament.$numFile.edit";
+#system "cp $apacheCGIpath/$OUTPUT_PATH/blast/seqf/tree/ornament.$numFile $apacheCGIpath/$OUTPUT_PATH/blast/seqf/tree/ornament.$numFile.edit";
 
-chdir "$apacheCGIpath/$outdir/blast/seqf/";
+chdir "$OUTPUT_PATH/blast/seqf/";
 
 
-system "nw_labels -I $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.tree > $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.labels";
-open (LABELS, "$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.labels")or die $!;
-open (OUTLABELS, ">$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.mapp")or die $!;
+system "nw_labels -I $OUTPUT_PATH/blast/seqf/tree/$numFile.tree > $OUTPUT_PATH/blast/seqf/tree/$numFile.labels";
+open (LABELS, "$OUTPUT_PATH/blast/seqf/tree/$numFile.labels")or die $!;
+open (OUTLABELS, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.mapp")or die $!;
 
 
   
@@ -153,7 +153,7 @@ close OUTLABELS;
 
 
 
-open (EDIT, ">>$apacheCGIpath/$outdir/blast/seqf/tree/ornament.$numFile") or die $!;
+open (EDIT, ">>$OUTPUT_PATH/blast/seqf/tree/ornament.$numFile") or die $!;
 foreach my $cc (@QC){
 ##print "siiiiii/$METcentral\n";
  print EDIT "\n";
@@ -167,8 +167,8 @@ foreach my $cc (@QC){
 print EDIT $antSMASHcircle;
 close EDIT;
 
-open (MAP, "$apacheCGIpath/$outdir/blast/seqf/tree/ornament.$numFile") or die $!;
-open (OUTMAP, ">$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.map") or die $!;
+open (MAP, "$OUTPUT_PATH/blast/seqf/tree/ornament.$numFile") or die $!;
+open (OUTMAP, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.map") or die $!;
 
 while(<MAP>){
  chomp;
@@ -193,14 +193,14 @@ print OUTMAP $antSMASHstring;
 close OUTMAP;
 close MAP;
 #----------------------- analiza KR con nw_clade-------
-open (KR, ">$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.kn") or die $!;
-open (KRR, ">$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.krr") or die $!;
-open (OUTKRR, ">$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.pruebaKR") or die $!;
+open (KR, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.kn") or die $!;
+open (KRR, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.krr") or die $!;
+open (OUTKRR, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.pruebaKR") or die $!;
  $numClades=-1;
  while($numClades<30){
  $numClades++;
   foreach my $y (keys %hashKR){
-      @listClade = `nw_clade -c $numClades $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.tree $y|nw_labels -I -`; 
+      @listClade = `nw_clade -c $numClades $OUTPUT_PATH/blast/seqf/tree/$numFile.tree $y|nw_labels -I -`; 
       foreach my $x (@listClade){
         chomp($x); 
 	
@@ -246,26 +246,26 @@ open (OUTKRR, ">$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.pruebaKR") or di
 close KR; 
 close KRR;
 close OUTKRR;
-system "cat $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.krr $apacheCGIpath/$outdir/blast/seqf/tree/ornament.$numFile >$apacheCGIpath/$outdir/blast/seqf/tree/ornament2.$numFile";  
-system "cat $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.map $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.kn>$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.map2";  
+system "cat $OUTPUT_PATH/blast/seqf/tree/$numFile.krr $OUTPUT_PATH/blast/seqf/tree/ornament.$numFile >$OUTPUT_PATH/blast/seqf/tree/ornament2.$numFile";  
+system "cat $OUTPUT_PATH/blast/seqf/tree/$numFile.map $OUTPUT_PATH/blast/seqf/tree/$numFile.kn>$OUTPUT_PATH/blast/seqf/tree/$numFile.map2";  
 #----------------------- END  analiza KR con nw_clade-------
 
 #system "nw_rename -l tree/$numFile.tree tree/$numFile.map";
-system "nw_rename -l $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.tree $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.mapp |nw_display -w 10600 -sr  -S -v 100 -i 'font-size:xx-small' -b 'opacity:0' -i 'visibility:hidden' -c $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.map2 -o $apacheCGIpath/$outdir/blast/seqf/tree/ornament2.$numFile ->$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.pp.svg";
+system "nw_rename -l $OUTPUT_PATH/blast/seqf/tree/$numFile.tree $OUTPUT_PATH/blast/seqf/tree/$numFile.mapp |nw_display -w 10600 -sr  -S -v 100 -i 'font-size:xx-small' -b 'opacity:0' -i 'visibility:hidden' -c $OUTPUT_PATH/blast/seqf/tree/$numFile.map2 -o $OUTPUT_PATH/blast/seqf/tree/ornament2.$numFile ->$OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg";
 #################### Nelly agregado prueba Feb 16 ######################
 ##########################################################################
-system "mkdir $apacheHTMLpath/$outdir";
- `perl -p -i -e 's/>/>\n/g' $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.pp.svg`;
- `rm $apacheCGIpath/$outdir/$numFile.idForcontext`;
- `perl $apacheCGIpath/blast/seqf/tree/zoom/ScaleSvg.pl $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.pp.svg `;
+system "mkdir $OUTPUT_PATH";
+ `perl -p -i -e 's/>/>\n/g' $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg`;
+ `rm $OUTPUT_PATH/$numFile.idForcontext`;
+ `perl $apacheCGIpath/blast/seqf/tree/zoom/ScaleSvg.pl $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg `;
 
-system "cp $apacheCGIpath/$outdir/blast/seqf/tree/$numFile.pp.svg.new $apacheHTMLpath/$outdir/$numFile.pp.svg.new";
+# system "cp $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg.new $OUTPUT_PATH/$numFile.pp.svg.new";
 
 ########################################33 Fin Nelly ##########################3
 
 
-open(OPT, ">$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.prueba2.svg")or die $!;
-open(OP, "$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.pp.svg.new")or die $!;
+open(OPT, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.prueba2.svg")or die $!;
+open(OP, "$OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg.new")or die $!;
  $cuentasust=0;
  while(<OP>){
   #$_ =~ s/<defs>/<script xlink:href="SVGPan\.js"/>/;
@@ -279,8 +279,10 @@ open(OP, "$apacheCGIpath/$outdir/blast/seqf/tree/$numFile.pp.svg.new")or die $!;
   print OPT "$tempo";
  }
 
-#$outdirANDfile="$outdir"."xxx"."$numFile";
-$outdirANDfile="$outdir";
+#$OUTPUT_PATHANDfile="$OUTPUT_PATH"."xxx"."$numFile";
+#$OUTPUT_PATHANDfile="$OUTPUT_PATH";
+$out_for_apache=$OUTPUT_PATH;
+$out_for_apache=~s/\/var\/www\/html//;
 print qq¬
 <html>
   <head>
@@ -317,6 +319,7 @@ print qq¬
    }
    </script>
   </head>
+<br> path $out_for_apache/blast/seqf/tree/$numFile.pp.svg.new </br>
   <body>
 
   <!-- header -->
@@ -328,7 +331,7 @@ print qq¬
       <table class="table table-bordered">
         <tr>
           <td>
-            <object type="image/svg+xml" name="viewport" data="/EvoMining/html/$outdir/$numFile.pp.svg.new" width="100%" height="500"></object>
+            <object type="image/svg+xml" name="viewport" data="$out_for_apache/blast/seqf/tree/$numFile.pp.svg.new" width="100%" height="500"></object>
             <script type="text/javascript">
             $(document).ready(function() {
             $('svg#outer').svgPan('viewport');
@@ -446,7 +449,7 @@ Send us your comments:
           <td>
 <p>
 
-<IFRAME SRC="/EvoMining/cgi-bin/sendtoDrawContext.pl?$outdirANDfile" name="iframe_abajo" WIDTH=810 HEIGHT=350 FRAMEBORDER=0 >  </IFRAME>
+<IFRAME SRC="/EvoMining/cgi-bin/sendtoDrawContext.pl?$OUTPUT_PATH" name="iframe_abajo" WIDTH=810 HEIGHT=350 FRAMEBORDER=0 >  </IFRAME>
 
 
 

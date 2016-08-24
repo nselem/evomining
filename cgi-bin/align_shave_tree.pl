@@ -15,17 +15,13 @@ use CGI;
 use globals;
 
 #system "mkdir -p /var/www/html/EvoMining/cgi-bin/blast/seqf/tree";
-## Faltaba outdir entre newevomining y blast
+## Faltaba OUTPUT_PATH entre newevomining y blast
 ## Lo cree a mano
 
 
-my $tfm2 = "mi_hashNUMVia.db" ;
+my $tfm2 = "$OUTPUT_PATH/mi_hashNUMVia.db" ;
 $hand2 = tie my %hashNUMVia, $tipoDB , "$tfm2" , 0 , 0644 ;
 print "$! \nerror tie para $tfm2 \n" if ($hand2 eq "");
-my $apacheCGIpath=$APACHE_CGI_PATH; 	#from globals
-my $newickPATH="/opt/newick-utils-1.6/src";
-my $reformatPATH="/opt/hmmer-3.1b1/easel/miniapps";
-#my $gblockPATH="/opt/seaview";
 
 my %Input;
 my $query = new CGI;
@@ -56,13 +52,11 @@ foreach my $pair(@pairs){
  $outdir = $Input2{'pidfecha'};
  }
  #print OUTT "$query->param($pair);->$Input{$pair}\n";
- #my $outdir = $Input{'pidfecha'};
+ #my $OUTPUT_PATH = $Input{'pidfecha'};
 }
-#my $outdir = $Input{'pidfecha'};
-
 
 #foreach my $x (keys %Input){
-#print OUTT "$x->$Input{$x}--$Input2{'pidfecha'}**$outdir\n";#
+#print OUTT "$x->$Input{$x}--$Input2{'pidfecha'}**$OUTPUT_PATH\n";#
 
 #}
 
@@ -89,13 +83,16 @@ print qq |
 my %hashNUM_NP='';
 
 #--------------------- Alineando---------------------------
+align();
+
+sub align{
 foreach my $c (@dat){
   
     ###########weekend###############  
-     system "/opt/muscle/muscle -in $outdir/blast/$c.concat.fasta -out $outdir/blast/$c.aln";
+     system "/opt/muscle/muscle -in $OUTPUT_PATH/blast/$c.concat.fasta -out $OUTPUT_PATH/blast/$c.aln";
 
   if($c ne 'Submit' and $c ne '' and  $c ne ' '){ 
-      $nam="$outdir/blast/$c.aln";
+      $nam="$OUTPUT_PATH/blast/$c.aln";
      ###########weekend############### 
      addGap($nam);
    }   
@@ -104,51 +101,56 @@ foreach my $c (@dat){
 #print qq |
 #<div >Done...</div><div >Using seq fire...</div>
 #|;
-open (LOG, ">$outdir/entradaAlignnn.log") or die $!;
+open (LOG, ">$OUTPUT_PATH/entradaAlignnn.log") or die $!;
+}
 
+
+#	NamesBeforeGblocks();
+#sub NamesBeforeGblocks{  
 #--------------------- Recortando alineamiento-------------
 foreach my $cc (@dat){
- chdir "$outdir/blast/seqf/";
+ chdir "$OUTPUT_PATH/blast/seqf/";
  #SEQFIRE #system "python seqfire.py -i ../$cc\gap.aln -a 2 -o 2";
  print LOG "aquiiiiii ENTRO\n";
  #------------------------------------------------------------------------------
  #seccion 1 para sustuir nombres largos por cortos para GBLOCKS,# se sustituyen todos los encabezados por precaucion
-  
- open(FILE, "/var/www/html/EvoMining/cgi-bin/$outdir/blast/$cc\gap.aln") or die $!;
- open(OUT, ">../$cc\gap.aln.out") or die $!;
- $cont=1;
-  while($line=<FILE>){
-    chomp($line);
-    if($line=~ />/){
-      $aux=$line;
-      $line = ">".$cont."_"."$cc\_aln";
-      $hashHeader{$line}=$aux;
-      $cont++;
-      #print "$line";
-      #<STDIN>;
-    }
-   print OUT "$line\n";
-  
-    }#internal while
+ 	open(FILE, "$OUTPUT_PATH/blast/$cc\gap.aln") or die "$!,$OUTPUT_PATH/blast/$cc\gap.aln";
+ 	open(OUT, ">../$cc\gap.aln.out") or die $!;
+	$cont=1;
+	while($line=<FILE>){
+    		chomp($line);
+    		if($line=~ />/){
+      			$aux=$line;
+      			$line = ">".$cont."_"."$cc\_aln";
+			$hashHeader{$line}=$aux;
+			$cont++;
+      			#print "$line";
+			#<STDIN>;
+    			}
+   		print OUT "$line\n";
+   		 }#internal while
  
-   close FILE;
-   close OUT;
-print LOG "antes de gblocks\n";
+	close FILE;
+  	close OUT;
+	print LOG "antes de gblocks\n";
+#}
+
+
  #-------------------------------------------------------------------------------------------------
    system "whoami>quien";
   ###########weekend###############
- #chdir "$outdir/blast/";
+ #chdir "$OUTPUT_PATH/blast/";
 my $dir=`pwd`;
   print LOG "Dir $dir\n/opt/Gblocks_0.91b/Gblocks ../$cc\gap.aln.out -b4=5 -b5=H -b3=10>LOG$cc.GBLOCks\n";
     system("/var/www/html/EvoMining/cgi-bin/Gblocks ../$cc\gap.aln.out -b4=5 -b5=H -b3=10>../LOG$cc.GBLOCks");
    # system "sudo Gblocks $cc\gap.aln.out -b4=5 -b5=H -b3=10>LOG$cc.GBLOCks";
-# chdir "$outdir/blast/seqf";
+# chdir "$OUTPUT_PATH/blast/seqf";
   #------------------------------------------------------------------------------
   #seccion 2 para sustuir nombres largos por cortos para GBLOCKS,# se sustituyen todos los encabezados por precaucion
   #regresa nombre largos despues de GBLOCKs
-$paath="/var/www/html/EvoMining/cgi-bin/$outdir/blast/$cc\gap.aln.out-gb";
- open(AGAIN, "/var/www/html/EvoMining/cgi-bin/$outdir/blast/$cc\gap.aln.out-gb") or die "$!,$paath";
- open(FINAL, ">/var/www/html/EvoMining/cgi-bin/$outdir/blast/$cc\gap.aln.out-gb2") or die $!;
+$paath="$OUTPUT_PATH/blast/$cc\gap.aln.out-gb";
+ open(AGAIN, "$OUTPUT_PATH/blast/$cc\gap.aln.out-gb") or die "$!,$paath";
+ open(FINAL, ">$OUTPUT_PATH/blast/$cc\gap.aln.out-gb2") or die $!;
   while($linea=<AGAIN>){
     chomp($linea);
    if($linea=~ />/){
@@ -164,7 +166,7 @@ $paath="/var/www/html/EvoMining/cgi-bin/$outdir/blast/$cc\gap.aln.out-gb";
 
   print LOG "salio\n";
   #-----------------------------------------------------------------------------
-}
+		}
 #print qq |
 #<div >Seqfire Done...</div>
 #|;
@@ -175,10 +177,10 @@ foreach my $cc (@dat){
  if($cc eq 'Submit'){
     next;
  }
- chdir "/var/www/html/EvoMining/cgi-bin/blast/seqf/";
+ chdir "$OUTPUT_PATH/blast/seqf/";
 ###########weekend############### 
 #system "$reformatPATH/esl-reformat --informat afa stockholm ../$cc\gap.aln.out-gb2 >$cc.stock";
-system "perl /var/www/html/EvoMining/cgi-bin/converter.pl  /var/www/html/EvoMining/cgi-bin/$outdir/blast/$cc\gap.aln.out-gb2 >$cc.stockLOG";
+system "perl /var/www/html/EvoMining/cgi-bin/converter.pl  $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2 >$cc.stockLOG";
 #CON SEQFIRE #system "/opt/hmmer-3.1b1-linux-intel-x86_64/binaries/esl-reformat --informat afa stockholm $cc\gap\_2_short.fasta >$cc.stock";
 #system " /opt/hmmer-3.1b1-linux-intel-x86_64/binaries/esl-reformat --informat afa stockholm 4_2_short.fasta > probeWEB.stock";
 }
@@ -188,7 +190,7 @@ system "perl /var/www/html/EvoMining/cgi-bin/converter.pl  /var/www/html/EvoMini
 
 
 #---------------------hash num and NP--------------
- open(HASH, "/var/www/html/EvoMining/cgi-bin/$outdir/hash.log")or die $!;
+ open(HASH, "$OUTPUT_PATH/hash.log")or die $!;
    while(<HASH>){
    chomp;
       #@data=split("---", $_);
@@ -205,11 +207,11 @@ foreach my $cc (@dat){
  if($cc eq 'Submit'){
     next;
  }
- chdir "$outdir/blast/seqf/";
+ chdir "$OUTPUT_PATH/blast/seqf/";
  ###########weekend###############  
- system "/opt/quicktree/quicktree_1.1/bin/quicktree -in a -out t -boot 10000  /var/www/html/EvoMining/cgi-bin/$outdir/blast/$cc\gap.aln.out-gb2.stock > /var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$cc.tree";
+ system "/opt/quicktree/quicktree_1.1/bin/quicktree -in a -out t -boot 10000 $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2.stock > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
  #########weekend######### 
- system "nw_distance -n /var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$cc.tree > /var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/distance.$cc";
+ system "nw_distance -n $OUTPUT_PATH/blast/seqf/tree/$cc.tree > $OUTPUT_PATH/blast/seqf/tree/distance.$cc";
  $dist="distance.$cc";
  #$fileNamee=findDistance2($dist,$cc);
  $namee=findDistance2($dist,$cc);
@@ -217,7 +219,7 @@ foreach my $cc (@dat){
  #open(GO, ">/var/www/newevomining/blast/seqf/checar");
  #print "nw_display -w 5600 -sr -S -v 100 -b 'visibility:hidden' -c $namee /tree$cc.tree >$cc.p.svg";
  #########weekend######### 
- system "nw_display -w 5600 -sr -S -v 100 -l 'font-size:x-small' -b 'visibility:hidden' -o /var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/ornament.$cc /var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$cc.tree >/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$cc.p.svg";
+ system "nw_display -w 5600 -sr -S -v 100 -l 'font-size:x-small' -b 'visibility:hidden' -o $OUTPUT_PATH/blast/seqf/tree/ornament.$cc $OUTPUT_PATH/blast/seqf/tree/$cc.tree >$OUTPUT_PATH/blast/seqf/tree/$cc.p.svg";
  #system "nw_display -w 5600 -sr -S -v 100 -b 'visibility:hidden' -c ../distance.9.only.cssmap 9.tree >9color2.svg"
 }
 
@@ -234,7 +236,7 @@ print qq |<div><td >Central</td></div>|;
 print qq |<div><td >Natural Products</td></div>|;
 #print qq |<div><td >HITS</td></div>|;
 print qq |<div><td >tree</td></div>|;
- open(FF, "/var/www/html/EvoMining/cgi-bin/$outdir/hash.log"); ###aqui hay que modificar
+ open(FF, "$OUTPUT_PATH/hash.log"); ###aqui hay que modificar
  while ($xef = <FF>){
      chomp($xef);
      @array =split("---",$xef);
@@ -243,7 +245,7 @@ print qq |<div><td >tree</td></div>|;
     foreach my $xc (@dat){
         if($array2[0] eq $xc){
           $onlyD="distance.$xc.only";
-open(XT, "/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$onlyD") or die "/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree, $onlyD $!";
+          open(XT, "$OUTPUT_PATH/blast/seqf/tree/$onlyD") or die "$!,$onlyD";
           
 	  while($line=<XT>){
               chomp($line);
@@ -285,8 +287,9 @@ open(XT, "/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$onlyD") or di
 	    } 
 	    print qq |</table>|;
 	    print qq |</td>|;
-	   print qq |<div><td ><a href="color_tree.pl?$array2[0]&&$outdir" target="_blank">check tree</a><br>" target="_blank"> </td></div>|;
-           #print qq |<div><td ><a href="http://148.247.230.39/cgi-bin/newevomining/tree2_2TOTALexecORIG.pl?$array2[0]&&$outdir" target="_blank">check tree</a><br><a href="http://10.10.100.156/newevomining/$outdir/blast/seqf/tree/$array2[0].tree" target="_blank"> Download newick_tree</a></td></div>|;
+                  print qq |<div><td ><a href="color_tree.pl?$array2[0]&&$OUTPUT_PATH" target="_blank">check tree</a> </td></div>|;
+
+		  # print qq |<div><td ><a href="http://cgi-bin/color_tree.pl?$array2[0]&&$OUTPUT_PATH" target="_blank">check tree</a><br><a href="http://$OUTPUT_PATH/blast/seqf/tree/$array2[0].tree" target="_blank"> Download newick_tree</a></td></div>|;
            #print qq |<div class="campo2"><td><a href="http://148.247.230.39/cgi-bin/newevomining/tree.pl?$array2[0]" target="_blank">check tree</a></td></div>|;
           print qq |</tr>|;
 	  $acum='';
@@ -427,31 +430,31 @@ sub findDistance2 {
    
   @NPs=split (/\,/,$hashNUM_NP{$numerin});
   #########weekend######### 
- # open (SI,">../../si.log");
+  open (SI,">../../si.log");
  #########weekend#########  
-# print SI "inicio $dis, $numerin\n";
+ print SI "inicio $dis, $numerin\n";
   foreach my $np (@NPs){
     $hashNPS{$np}=1;
   #########weekend######### 
     print SI "- $np\n";
     #######-------- SE DEJO -c 1 para solo marca el producto natural, si se incrementa -c se marcan mas clados
    #########weekend#########  
-   system "nw_clade -c 1 /var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$numerin.tree $np |nw_distance -n ->>/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/distance.$numerin.only1";
+   system "nw_clade -c 1 $OUTPUT_PATH/blast/seqf/tree/$numerin.tree $np |nw_distance -n ->>$OUTPUT_PATH/blast/seqf/tree/distance.$numerin.only1";
     #print NPPS "$numerin.tree---$np\n";
    #########weekend######### 
-    system "echo ==== >>/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/distance.$numerin.only1";
+    system "echo ==== >>$OUTPUT_PATH/blast/seqf/tree/distance.$numerin.only1";
   }
  #########weekend######### 
- # close SI;
+  close SI;
    $seccion=0;
    $colorSeccion=0;
  #########weekend#########
-   open (NPPS,">/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/$numerin.NPPS.log") or die $!;
+   open (NPPS,">$OUTPUT_PATH/blast/seqf/tree/$numerin.NPPS.log") or die $!;
  #########weekend######### 
-  open (DOUT, ">/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/distance.$numerin.only")or die $!;
-  open (D, "/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/distance.$numerin.only1")or die $!;
+  open (DOUT, ">$OUTPUT_PATH/blast/seqf/tree/distance.$numerin.only")or die $!;
+  open (D, "$OUTPUT_PATH/blast/seqf/tree/distance.$numerin.only1")or die $!;
   #########weekend#########
-    open (ORNAMENT, ">/var/www/html/EvoMining/cgi-bin/$outdir/blast/seqf/tree/ornament.$numerin")or die $!;
+    open (ORNAMENT, ">$OUTPUT_PATH/blast/seqf/tree/ornament.$numerin")or die $!;
   #########weekend#########
     print ORNAMENT qq|"<circle style='fill:blue;stroke:black' r='8'/>" I |;
    while (<D>){
@@ -591,7 +594,7 @@ sub findDistance {
   my ($dis, $numerin)= @_;
    
    
-   open(HASH, "$outdir/hash.log")or die $!;
+   open(HASH, "$OUTPUT_PATH/hash.log")or die $!;
    while(<HASH>){
    chomp;
       #@data=split("---", $_);
@@ -605,7 +608,7 @@ sub findDistance {
    }
    close HASH;
    
-   open (D, "$outdir/blast/seqf/$dis");
+   open (D, "$OUTPUT_PATH/blast/seqf/$dis");
    while (<D>){
       chomp;
       @a=split("\t", $_);

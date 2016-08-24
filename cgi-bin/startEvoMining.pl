@@ -5,10 +5,12 @@ use Getopt::Long 'HelpMessage';
  
 
 system ("sudo service apache2 start");
+
+###############################################3
 #ask for GEnomes
 #ask for NP's
 #ask for central pathways
-
+####################################################################
 
 =head1 NAME
 Corason - pass your inputs trough the command line!
@@ -24,12 +26,6 @@ For float values (as e_value, e_core etc) 0.001 will work, but .001 won't do it.
 0.01
 =cut
 
-##################################################################
-
-
-
-####################################################################################################
-#########################  end of variables ########################################################
 ####################################################################################################
 ################       get options ##############################################################
 GetOptions(
@@ -40,26 +36,32 @@ GetOptions(
        ) or HelpMessage(1);
 
 #######################3 end get options ###############################################3
+
+printInputs();
+my $output_path="$central_db\_$natural_db\_$genome_db";
+createOutDir($output_path);
+
+system("perl reparaHEADER.pl");
+
+#open (LOG, ">$output_path/EvoMining.log") or die "$!";
+#print LOG "ReparaHEADER\tDONE\n";
+#close LOG;
+###################### Subs ######################################
+sub createOutDir{
+	my $output_path=shift;
+	if (! -e "/var/www/html/exchange/$output_path"){
+		system("mkdir /var/www/html/EvoMining/exchange/$output_path");
+		system ("chmod -R 777 /var/www/html/EvoMining/exchange/$output_path");
+		print "mkdir /var/www/html/EvoMining/exchange/$output_path has been created\n";
+		}
+	else {
+		print "mkdir /var/www/html/EvoMining/exchange/$output_path already exists\n";
+		}
+	}
+
+sub printInputs{
 print "Welcome to EvoMining\n";
 print "Genome DB $genome_db\n";
 print "Central DB $central_db\n";
 print "Natural Products $natural_db\n";
-
-
-my $output_path="$central_db\_$natural_db\_$genome_db";
-
-
-if (! -e "/var/www/html/exchange/$output_path"){
-	system("mkdir /var/www/html/EvoMining/exchange/$output_path");
-	system ("chmod -R 777 /var/www/html/EvoMining/exchange/$output_path");
-	print "mkdir /var/www/html/EvoMining/exchange/$output_path has been created\n";
-	}
-else {
-	print "mkdir /var/www/html/EvoMining/exchange/$output_path already exists\n";
-	}
-
-system("perl reparaHEADER.pl");
-
-open (LOG, ">$output_path/EvoMining.log") or die "$!";
-print LOG "ReparaHEADER\tDONE\n";
-close LOG;
+}

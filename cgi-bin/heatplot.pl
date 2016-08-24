@@ -9,12 +9,13 @@ use CGI::Carp qw(fatalsToBrowser);
 use CGI;
 use Statistics::Basic qw(:all);
 use globals;
+use IO::Tee; 
 
 ############################## def-DBM #################################
 use Fcntl ; use DB_File ; $tipoDB = "DB_File" ; $RWC = O_CREAT|O_RDWR
 ;
 ############################## def-SUB  ################################
-my $tfm2 = "mi_hashNUMVia.db" ;
+my $tfm2 = "$OUTPUT_PATH/mi_hashNUMVia.db" ;
 $hand2 = tie my %hashNUMVia, $tipoDB , "$tfm2" , $RWC , 0644 ;
 print "$! \nerror tie para $tfm2 \n" if ($hand2 eq "");
 
@@ -79,6 +80,7 @@ print "$! \nerror tie para $tfm3A \n" if ($hand3A eq "");
 
 
 my %Input;
+open (STDOUT, "| tee $OUTPUT_PATH/heatplot.html") or die "Teeing off: $!\n";
 
 my $query = new CGI;
 print $query->header,
@@ -95,29 +97,27 @@ $Input{$pair} = $query->param($pair);
 $date = `date`;
 @divDate=split(/ /,$date);
 
-$pid_fecha=$$."_".$divDate[0].$divDate[1].$divDate[2].$divDate[$#divDate];
-$outdir="$pid_fecha";
 
-chomp($outdir);
+chomp($OUTPUT_PATH);
 
 
 
-$la="$outdir/blast/seqf/tree";
-system "mkdir -p $outdir/blast/seqf/tree";
-system "mkdir -p $outdir/FASTASparaNP";
-system "mkdir -p $outdir/NewFASTASparaNP";
+$la="$OUTPUT_PATH/blast/seqf/tree";
+system "mkdir -p $OUTPUT_PATH/blast/seqf/tree";
+system "mkdir -p $OUTPUT_PATH/FASTASparaNP";
+system "mkdir -p $OUTPUT_PATH/NewFASTASparaNP";
 
 
 #system "mkdir -p $la";
-#$la="$outdir/blast";
+#$la="$OUTPUT_PATH/blast";
 
 #system "mkdir -p $la";
 
 #mkdir( $la ) or die "Couldn't create $la directory, $!";
-#mkdir ("$outdir/blast/seqf");
-#mkdir ("$outdir/blast/seqf/tree");
-#mkdir ("$outdir/FASTASparaNP");
-#mkdir ("$outdir/NewFASTASparaNP");
+#mkdir ("$OUTPUT_PATH/blast/seqf");
+#mkdir ("$OUTPUT_PATH/blast/seqf/tree");
+#mkdir ("$OUTPUT_PATH/FASTASparaNP");
+#mkdir ("$OUTPUT_PATH/NewFASTASparaNP");
 #--------------------------------------
 
 
@@ -131,7 +131,7 @@ my $dir = "DB";
 my $dirDB = "DB";
 my $dirPB = "PasosBioSin";
 my $blastdir = "/opt/ncbi-blast-2.2.28+/bin/";
-my $OUTblast = "$outdir/blast";
+my $OUTblast = "$OUTPUT_PATH/blast";
 
 #------- Rutas Centrales --------------
 my $viaMet=$VIA_MET;	 ## From globals
@@ -177,11 +177,11 @@ my @extensiones = ('gif','jpg','jpeg','prot_fasta.2ConNombre','prot_fasta.2', 'f
 #my $db = "prueba.db";
 #my $db = "ALL_curadoHEADER2.db";
 
-#open (LALO, ">$outdir/lalo");
+#open (LALO, ">$OUTPUT_PATH/lalo");
 $cont=0;
 $valida=1;
 $cuentaVia=1;
-open (CHECK, ">$outdir/check.hash");
+open (CHECK, ">$OUTPUT_PATH/check.hash");
 open (VIAS, "$dirPB/$viaMet");
 $cuantasViasvan=0;
 while (<VIAS>){
@@ -265,8 +265,8 @@ open (BLA, "blast/$blast_file") or die "$!"; #from globa.pm
 
 
 #open (BLA, "blast/pscp11OctubreTodos.blast");
-#$directory="$outdir/log.blast";
-$directory="$outdir/log.blast";
+#$directory="$OUTPUT_PATH/log.blast";
+$directory="$OUTPUT_PATH/log.blast";
 open (LOG, ">$directory") or die "$!,$directory";
 $co=1;
 while (<BLA>){
@@ -306,7 +306,7 @@ chomp;
 
 #print LOG "\n\n____________________________________\n\n\n";
 $contador=0;
-open (NUEVO, ">$outdir/busca.Gintroducido") or die $!;
+open (NUEVO, ">$OUTPUT_PATH/busca.Gintroducido") or die $!;
 $firsttime=1; # esta bandera indica qeu hay un organismo mas ademas de los registrados en el hash y es la primera vez que entra en el proceso
 $cuentaOrgdemas=101;
 $cuentaOrgdemas=237;
@@ -396,7 +396,7 @@ name="foma">
     <div class="campo-1"><textarea style="width: 65px; height: 25px;" cols="1" rows="1" name="evalue">0.0001</textarea></div>
     <div class="campo2">Minimum Score:</div>
     <div class="campo2-2"><textarea style="width: 50px; height: 25px;" cols="1" rows="1" name="score">100</textarea></div>
-    <input type="hidden" name="pidfecha" value="$outdir">
+    <input type="hidden" name="pidfecha" value="$OUTPUT_PATH">
     <div class="boton"><button  value="Submit" name="Submit">SUBMIT</button></div>
 </table>
 <br>
@@ -463,7 +463,7 @@ print "<tr>";
 #pLOGrint "</table>";
 }#end for filas
 print "</table>";
-open(SALE, ">$outdir/vacio.hash");
+open(SALE, ">$OUTPUT_PATH/vacio.hash");
 $tope2=$#tabla2+1;
 ####print LOG "paso antes columas $tabla2{$tabla2[1]} filas $tope2\n";
 #------------------EXTRAE gi y genera fastas-----------------
@@ -516,7 +516,7 @@ for(my $y=1; $y<=$#{$tabla2[1]}; $y++){ #columnas******
 	  #print SALE "$id\t$Allgis{$id}\n";
 	  @columFamilies=split(/-/,$Allgis{$id});
 	  foreach my $y (@columFamilies){ 
-	   open (FASTA, ">>$outdir/FASTASparaNP/$y.fasta") or die $!;
+	   open (FASTA, ">>$OUTPUT_PATH/FASTASparaNP/$y.fasta") or die $!;
  	   print FASTA "$_\n";
 	   close FASTA;
 	  } 
@@ -528,7 +528,7 @@ for(my $y=1; $y<=$#{$tabla2[1]}; $y++){ #columnas******
       else{
        if ($siH ==1){
 	  foreach my $y (@columFamilies){ 
-         	open (FASTA, ">>$outdir/FASTASparaNP/$y.fasta") or die $!;
+         	open (FASTA, ">>$OUTPUT_PATH/FASTASparaNP/$y.fasta") or die $!;
          	print FASTA "$_\n";
 	 	close FASTA;
 	}	
@@ -545,7 +545,11 @@ for(my $y=1; $y<=$#{$tabla2[1]}; $y++){ #columnas******
 
 
 close SALE;
+close STDOUT;
 
+open (LOG, ">>$output_path/EvoMining.log") or die "$!";
+print LOG "Heatplot\tDONE\n";
+close LOG;
 
 
 
