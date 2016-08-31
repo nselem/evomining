@@ -259,7 +259,7 @@ print CHECK "$cuantasViasvan----$cuentaVia\n";
 
 
 
-open (BLA, "blast/$blast_file") or die "$!"; #from globa.pm
+open (BLA, "$OUTPUT_PATH/blast/$blast_file") or die "$!"; #from globa.pm
 
 
 
@@ -547,7 +547,7 @@ for(my $y=1; $y<=$#{$tabla2[1]}; $y++){ #columnas******
 close SALE;
 close STDOUT;
 
-open (LOG, ">>$output_path/EvoMining.log") or die "$!";
+open (LOG, ">>$OUTPUT_PATH/EvoMining.log") or die " Not open LOG file $!";
 print LOG "Heatplot\tDONE\n";
 close LOG;
 

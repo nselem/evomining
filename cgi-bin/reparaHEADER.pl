@@ -76,6 +76,7 @@ print "$! \nerror tie para $tfm \n" if ($hand eq "");
 
 
 $genomes=$GENOMES; #from globals
+print "Im using as genomes $GENOMES\n";
 #`mkdir /home/evoMining/newevomining/blast/BBH/$genomes`;
 
 `mkdir -p $OUTPUT_PATH/blast/BBH/$genomes/aux_files`;
@@ -118,6 +119,7 @@ print "$! \nerror tie para $tfmAM \n" if ($handAM eq "");
 #-------------CONFIGURACION------------------------
  $MEtCentral="PasosBioSin/$VIA_MET"; #from globals
  $genomesDB="DB/$genomes/$genomes.fasta"; #from globals
+ print "$genomesDB = DB/$genomes/$genomes.fasta"; #from globals
  $genomesOUT="DB/$genomes\HEADER.fasta"; #from globals
  #Query = Central Met
  $genomesOUTDB="DB/$genomes\HEADER.db"; #from globals
@@ -223,7 +225,7 @@ bbhAfterUniq(@lista0);#INPUT los .uniq OUTPUT=BBH en /blasts con extension .bbh
 print "Done!\n";
 
 
-pen (LOG, ">$output_path/EvoMining.log") or die "$!";
+open (LOG, ">$OUTPUT_PATH/EvoMining.log") or die "$!";
 print LOG "ReparaHEADER\tDONE\n";
 close LOG;
 
@@ -251,7 +253,7 @@ $top=2;
   
   
   foreach $i (@cadenas){
-   open (BLAST, "blast/$i") or die "blast/$i,$!";
+   open (BLAST, "$OUTPUT_PATH/blast/$i") or die "blast/$i,$!";
    while (<BLAST>){
      chomp;
      @divBlast=split("\t",$_);

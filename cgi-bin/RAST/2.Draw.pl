@@ -69,7 +69,10 @@ open (OUT, ">$apacheHTMLpath/$Folder/Contextos.svg") or die "|$!--$apacheHTMLpat
 close OUT;
 `perl -p -i -e 'if(/\<polygon/)\{s/title=\"/\>\n\<title\>/g;if(m{\/\>\$})\{s{\" \/\>}{\<\/title\>\<\/polygon\>};\}\}else\{if((!/^\t/) and m{\/\>})\{s{\" \/>}{<\/title><\/polygon>};\}\}' $apacheHTMLpath/$Folder/Contextos.svg`;
 #system "firefox $file.svg";
- #`rm $apacheHTMLpath/$Folder/*.input`;
+if(!-e "$apacheHTMLpath/$Folder/InputFiles"){
+	`mkdir $apacheHTMLpath/$Folder/InputFiles`;
+	}
+ `mv $apacheHTMLpath/$Folder/*.input $apacheHTMLpath/$Folder/InputFiles/.`;
 ##################################################################
 ###    subs ######################################################
 

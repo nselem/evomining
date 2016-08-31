@@ -2,26 +2,21 @@ use strict;
 use warnings;
 
 
-########3 Nota necesito corregir que lea la cantidad total de genes del archivo total de base de datos de genomas.
-## This script generates one images with all the ids on file
-
-`rm *.input`;
-#print "Number of contexts $NumberContexts\n";
+######## Inputs from user
 my $fileNames="RAST/RAST.ids"; ##File with genome ids RASt.ids
-#my @gen_id=@ARGV; ##File with genome ids to get the contexts
 open (ERROR, ">Error") or die $!;
 
-#print "$ARGV[0]\n";
-
-#print "0:$div[0], 1:$div[1]\n";
 my $apacheHTMLpath="/var/www/html/EvoMining/exchange";
-my $Folder=$ARGV[0];
+my $Folder=shift @ARGV;
 chomp($Folder);
 $Folder =~ s/\r|\s//g;
 chomp($Folder);
+
 my @gen_id;
 @gen_id=@ARGV;
-print ERROR "este es el contenido !$gen_id[0]! !$Folder!\n";
+
+print ERROR "Ids !$gen_id[0]!\n!$Folder!\n";
+print "Inputs\nGen IDs:!$gen_id[0]!\nSession folder: !$Folder! \n";
 
 #print "Reading $file\n";
 my %LIST;
@@ -29,12 +24,13 @@ my %NAMES;
 my $long=80000;
 my $ClusterSize=100; ##Gen number around
 
-print "$fileNames\n";
+print "File Names: $fileNames\n";
+print "Input stage has finished\n\n";
 #print "$ARGV[0],$ARGV[1]!\n";
 
 ###################### Main ########################################
 	read_list($fileNames,\%LIST,\%NAMES,@gen_id);
-	#my $pause=<STDIN>;
+	print "list has been read it\n\n";
 	foreach my $gi (keys %LIST){
 		my $gi_file=$LIST{$gi};
 		print "working on $gi on $gi_file\n";
@@ -130,20 +126,24 @@ sub read_list{  ## Get the files where the genes belongs
 	my $refNAMES=shift;
 	my @ID=@_;
         my $pwd =`pwd`;
+#	print "ID $ID[0]";
 	#open (FILE, $file) or die "Could not open file $file \n $!";
 
 	for my $gen_id (@ID){
 	#	chomp $line;
-		#print "$line\n";
+		print "Id: $gen_id\n";
 		my @sp=split(/\./,$gen_id);
 
 		if ($sp[0] and $sp[1]){
 			print("0:$sp[0],1:$sp[1],2:$sp[2]\n");
 			my $genome=$sp[0].".".$sp[1];
+			print "genome $genome!\n";
 			open (NAMES,$fileNames) or die "Could not open names file\n $fileNames-$pwd-$!";
 			print "Reading file names from $fileNames-$pwd\n-";
+
 				for my $line2 (<NAMES>){
 					chomp $line2;
+					print "line2 $line2!";
 					my @sp2=split(/\t/,$line2);
 					if($line2=~/$genome/){
 						print "$line2\t field1:$sp2[0]\tfield2:$sp2[2]\n";

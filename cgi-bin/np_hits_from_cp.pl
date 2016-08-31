@@ -16,12 +16,6 @@ use Fcntl ; use DB_File ; $tipoDB = "DB_File" ; $RWC = O_CREAT|O_RDWR
 my %Input;
 my $query = new CGI;
 
-
-
-open (LOG, "$OUTPUT_PATH/EvoMining.log") or die "$!";
-close LOG;
-
-
 my $via_met=$VIA_MET; # From globals
 my $np_db=$NP_DB;	#From globals
 
@@ -58,6 +52,7 @@ else {
 if(!$prev_np){
 `/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db`;
 }
+#`/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db`;
 ####################################################################################
 my $oldid;
 ($eval,$score2,$oldid)=recepcion_de_archivo(); #Iniciar la recepcion del archivo
@@ -65,7 +60,8 @@ my $oldid;
 #print "Im here 1:$eval 2:$score2 3:$OUTPUT_PATH!";
 #exit;
 
-system "touch $OUTPUT_PATH/prueba$OUTPUT_PATH";
+system "touch $OUTPUT_PATH/prueba";
+
 $hashothernames{'enolase2'}="enolase";
 $hashothernames{'enolase1'}="enolase";
 $hashothernames{'enolase4'}="enolase";
@@ -165,141 +161,128 @@ system "ls $OUTPUT_PATH/FASTASparaNP > $OUTPUT_PATH/ls.FASTANP";
 
 #system "mkdir NewFASTASparaNP";
 if(!$prev_np){
+	open (BNP, "$OUTPUT_PATH/ls.FASTANP") or die $!;
+	while (<BNP>){
+		chomp;
+		 ##########cuenta y saca secuencias corts y largas####################
+  		open(OUTFASTA, ">$OUTPUT_PATH/NewFASTASparaNP/$_")or die $!;
+#  		print (">$OUTPUT_PATH/NewFASTASparaNP/$_");
 
-open (BNP, "$OUTPUT_PATH/ls.FASTANP") or die $!;
-while (<BNP>){
-chomp;
- ##########cuenta y saca secuencias corts y largas####################
-  open(OUTFASTA, ">$OUTPUT_PATH/NewFASTASparaNP/$_")or die $!;
+	 	open(TAM, "$OUTPUT_PATH/FASTASparaNP/$_") or die $!;
+		  $contDentro=0;
+		  $contfuera=0;
+		  $contfueraabajo=0;
+		  undef %hashLARGASCORTAS;
+		  $hashLARGASCORTAS{$headerr}="";
 
- open(TAM, "$OUTPUT_PATH/FASTASparaNP/$_") or die $!;
-  $contDentro=0;
-  $contfuera=0;
-  $contfueraabajo=0;
-  undef %hashLARGASCORTAS;
-  $hashLARGASCORTAS{$headerr}="";
+		 while($lineaa=<TAM>){
+			 chomp($lineaa);
+			  if($lineaa =~ />/){
+			     $headerr=$lineaa;
+  				}
+  			  else{
+			      if(!exists $hashLARGASCORTAS{$headerr}){# solo para quitar el warning de qeu se concatenaba sin inicializar
+			        $hashLARGASCORTAS{$headerr}=$lineaa; 
+     				 }
+      			      else{
+			        $hashLARGASCORTAS{$headerr}=$hashLARGASCORTAS{$headerr}.$lineaa; 
+      				}
+			     }
+		  	}#end while interno
+ 		close TAM;
 
- while($lineaa=<TAM>){
- chomp($lineaa);
-  if($lineaa =~ />/){
-     $headerr=$lineaa;
-  }
-  else{
-      if(!exists $hashLARGASCORTAS{$headerr}){# solo para quitar el warning de qeu se concatenaba sin inicializar
-        $hashLARGASCORTAS{$headerr}=$lineaa; 
-      }
-      else{
-        $hashLARGASCORTAS{$headerr}=$hashLARGASCORTAS{$headerr}.$lineaa; 
-      }
-  }
- }#end while interno
- close TAM;
-
- #------------------------- 
- #separa las bases y cuenta
- #------------------------- 
- ###print "Separando bases...\n"; 
- $cuentaSEQ=0;
- undef @arrpasos2;
- foreach my $x (keys %hashLARGASCORTAS){
-   @baseees=split(//,$hashLARGASCORTAS{$x});
-   $tamSEQ=$#baseees+1;
-   $hashID_size{$x}=$tamSEQ;
-   $cuentaSEQ++;
-   $sumaTAM=$sumaTAM+$tamSEQ;
-   $idtam=$x."&&&".$tamSEQ;
-   push (@arrpasos2,$idtam);
-   push (@arrpasos,$tamSEQ);
- }
-  $promedioTamSEQ=$sumaTAM/$cuentaSEQ;
+		 #------------------------- 
+		 #separa las bases y cuenta
+		 #------------------------- 
+		 ###print "Separando bases...\n"; 
+		 $cuentaSEQ=0;
+		 undef @arrpasos2;
+		 foreach my $x (keys %hashLARGASCORTAS){
+			@baseees=split(//,$hashLARGASCORTAS{$x});
+			$tamSEQ=$#baseees+1;
+   			$hashID_size{$x}=$tamSEQ;
+			$cuentaSEQ++;
+   			$sumaTAM=$sumaTAM+$tamSEQ;
+   			$idtam=$x."&&&".$tamSEQ;
+   			push (@arrpasos2,$idtam);
+   			push (@arrpasos,$tamSEQ);
+			 }
+ 	 	$promedioTamSEQ=$sumaTAM/$cuentaSEQ;
   
- #------------------------- 
- #promedio y DEVstd
- #------------------------- 
- ###print " Calculando devstd...\n";  
- #<STDIN>;
- ####################################################
- ##    CALCULO DE DESVIACION ESTANDAR
- ###################################################
-   $contstd=1;
-   my @v1  = vector(@arrpasos);
-   my $std = stddev(@v1);
-   $prommasDEV=$promedioTamSEQ+$std;
-   $promminusDEV=$promedioTamSEQ-$std;
-   $promminusDEV2=$promminusDEV-$std;# para experimentar quitando dos devstd abajo
-   ##print "$_ ->prom:$promedioTamSEQ-->DEVstd:$std\n";
-   ##<STDIN>;#
-   $cuentaSEQ=0;
-  $sumaTAM=0;
+		 #------------------------- 
+		 #promedio y DEVstd
+		 #------------------------- 
+		 ###print " Calculando devstd...\n";  
+		 #<STDIN>;
+		 ####################################################
+		 ##    CALCULO DE DESVIACION ESTANDAR
+		 ###################################################
+	   	$contstd=1;
+   		my @v1  = vector(@arrpasos);
+   		my $std = stddev(@v1);
+   		$prommasDEV=$promedioTamSEQ+$std;
+   		$promminusDEV=$promedioTamSEQ-$std;
+   		$promminusDEV2=$promminusDEV-$std;# para experimentar quitando dos devstd abajo
+   		##print "$_ ->prom:$promedioTamSEQ-->DEVstd:$std\n";
+   		##<STDIN>;#
+   		$cuentaSEQ=0;
+  		$sumaTAM=0;
  
-   foreach my $xids ( @arrpasos2 ){
-     @idssize=split(/&&&/,$xids);
-     if($idssize[1] > $prommasDEV){
-       #print "$idssize[0] $idssize[1] > $prommasDEV";
-       #<STDIN>;
+   		foreach my $xids ( @arrpasos2 ){
+     			@idssize=split(/&&&/,$xids);
+     			if($idssize[1] > $prommasDEV){
+			       #print "$idssize[0] $idssize[1] > $prommasDEV";
+			       #<STDIN>;
        
-       $SeqRecortada= substr ($hashLARGASCORTAS{$idssize[0]}, 0, $prommasDEV);  #recorta la secuencia al tamanio promedio+STDdev
-       print OUTFASTA "$idssize[0]\n$SeqRecortada\n";
-       $contfuera++;
-     }
-     elsif($idssize[1] < $promminusDEV2){
-     
-        
-        $contfueraabajo++;
-     }
-     else{
-        print OUTFASTA "$idssize[0]\n$hashLARGASCORTAS{$idssize[0]}\n";
-        $contDentro++;
-     }
+			       $SeqRecortada= substr ($hashLARGASCORTAS{$idssize[0]}, 0, $prommasDEV);  #recorta la secuencia al tamanio promedio+STDdev
+			       print OUTFASTA "$idssize[0]\n$SeqRecortada\n";
+			       $contfuera++;
+     				}
+			 elsif($idssize[1] < $promminusDEV2){
+        			$contfueraabajo++;
+				}
+ 	    		 else{
+			        print OUTFASTA "$idssize[0]\n$hashLARGASCORTAS{$idssize[0]}\n";
+			        $contDentro++;
+     				}
 
 
-       ### print "$xids\n";
-  }
+			       ### print "$xids\n";
+			  }
  
-  $totalfuera=$contfuera+$contfueraabajo;
-  ###print "Dentro :$contDentro  Fueraarriba: $contfuera  fueraabajo:$contfueraabajo totalfuera:$totalfuera";
+  		$totalfuera=$contfuera+$contfueraabajo;
+  		###print "Dentro :$contDentro  Fueraarriba: $contfuera  fueraabajo:$contfueraabajo totalfuera:$totalfuera";
   
-  ###<STDIN>;
+		  ###<STDIN>;
 
- ##
- ##$prommasDEV
+		 ##
+		 ##$prommasDEV
 
- undef @arrpasos;
-  #print "$_ ->prom:$promedioTamSEQ-->DEVstd:$std\n";
-  #<STDIN>;
-######################################################
- #foreach my $y (keys %hashID){
- #  print "$y-->$hashID{$y}-->prom:$promedioTamSEQ-->DEVstd:$std";
- #  <STDIN>;
- #}
-  
-  undef %hashID_size;
-  undef %hashID;
-  
-  close OUTFASTA;
-
-
+		 undef @arrpasos;
+		  #print "$_ ->prom:$promedioTamSEQ-->DEVstd:$std\n";
+		  #<STDIN>;
+		######################################################
+		 #foreach my $y (keys %hashID){
+		 #  print "$y-->$hashID{$y}-->prom:$promedioTamSEQ-->DEVstd:$std";
+ 		#  <STDIN>;
+ 		#}
  
+		  undef %hashID_size;
+		  undef %hashID;
  
- ##########FIN cuenta y saca secuencias corts y largas####################
+ 		 close OUTFASTA;
+ 
+		 ##########FIN cuenta y saca secuencias corts y largas####################
+		
+		#system "touch $OUTPUT_PATH/prueba0";
+		##################weekend#####################
+		## version con todos##
+		####weekend#
+       		$blast=system("/opt/blast/bin/blastp -db NPDB/$np_db.db -query $OUTPUT_PATH/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out  $OUTPUT_PATH/blast/$_\_ExpandedVsNp.blast") ;#  or die       "EERROOOR:  $?,$!,%d, %s coredump";
+       		#$blast=`/opt/blast/bin/blastp -db NPDB/$np_db.db -query $OUTPUT_PATH/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out $OUTPUT_PATH/blast/$_\_ExpandedVsNp.blast`;#" or die "EERROOOR:$?,$!,%d, %s coredump";
+		}#end while externo	
+	}# end if  np on LOG
 
-#system "touch $OUTPUT_PATH/prueba0";
-##################weekend#####################
-## version con todos##
-####weekend#
-       $blast=`/opt/blast/bin/blastp -db NPDB/$np_db.db -query $OUTPUT_PATH/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out $OUTPUT_PATH/blast/$_\_ExpandedVsNp.blast`;#" or die "EERROOOR:$?,$!,%d, %s coredump";
-} 
-#my $returnCode = system( $systemCommand );
-
-  
-  #system "touch $OUTPUT_PATH/prueba1";
-
-### version solo con resaltados en rojo en el heatplot##system "/opt/ncbi-blast-2.2.28+/bin/blastp -db /var/www/newevomining/NPDB/NP_DB_NOVEMBER2014clean.db -query /var/www/newevomining/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out /var/www/newevomining/blast/$_\_ExpandedVsNp.blast";
-########we######system "/opt/ncbi-blast-2.2.28+/bin/blastp -db /var/www/newevomining/NPDB/NATURAL_PRODUCTS_DB3.db -query /var/www/newevomining/FASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out /var/www/newevomining/blast/$_\_ExpandedVsNp.blast";
-
-#blast vs NP
-
-}#end while externo
 
 close BNP;
 #print "<h1>Done...</h1>"; ]
@@ -496,9 +479,9 @@ print qq |</table>|;
 print qq| </form> |; 
 untie %NombresPorNum;
 #exit(1);
-
-open (LOG, ">>$OUTPUT_PATH/EvoMining.log") or die "$!";
- print "np_hits_from_cp\DONE\n";
+system("chmod 777 $OUTPUT_PATH/EvoMining.log");
+open (LOG, ">>$OUTPUT_PATH/EvoMining.log") or die " not open $OUTPUT_PATH/EvoMining.log $!";
+print LOG "np_hits_from_cp\tDONE\n";
 close LOG;
 
 #####################################################

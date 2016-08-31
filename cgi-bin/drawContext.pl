@@ -47,10 +47,9 @@ my $out2= `perl RAST/2.Draw.pl $folderSesion`;
 print qq |
 <html>
  <head>
-  <title>Contextos evoMining</title>
+  <title>EvoMining Contexts <br></title>
  </head>
  <body>
-   <center><p>Contextos evomining perl RAST/1.WriteInputsFromList.pl $folderSesion $allIds </p>
  <object type="image/svg+xml" name="viewport2" data="$apacheHTMLpath/$path/Contextos.svg" width="100%" ></object> 
   </body>
 </html>
@@ -61,6 +60,7 @@ print qq |
  #FolderSesion ¡$folderSesion! <br>
  #Out: $out <br>
 
+   #<center><p>Contextos evomining perl RAST/1.WriteInputsFromList.pl $folderSesion $allIds </p>
 # <img src='$apacheHTMLpath/$path/Contextos.svg' onerror='this.src='/newevomining/test.png''> 
 ## Pendiente borrar todas las noches }.input }svg
 #Div0 ¡$div[0]!<br>
