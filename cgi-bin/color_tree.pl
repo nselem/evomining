@@ -1,26 +1,9 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 use CGI::Carp qw(fatalsToBrowser);
 use CGI;
 use globals;
 use Fcntl ; use DB_File ; $tipoDB = "DB_File" ; $RWC = O_CREAT|O_RDWR;
- #$tfm = "/var/www/newevomining/blast/BBH/hashMETCENTRAL22.db" ;
- my $apacheCGIpath=$APACHE_CGI_PATH;
- my $newickPATH="/opt/newick-utils-1.6/src";
- my $apacheHTMLpath=$APACHE_HTML_PATH;
- 
- $genomes =$GENOMES; #from globals
- $tfm = $TFM ; #from globals
- $np_db=$NP_DB ; #from globals
- 
- #$genomes ="los30"; #
- #$tfm = "hashMETCENTRAL$genomes.db"; 
- 
- 
- $hand = tie  %hashMETCENTRAL, $tipoDB , "$tfm" , 0 , 0644 ;
 
- my $tfmAsmash= "hashANTISAMASandCF$GENOMES.db" ;
-$handAM = tie my %hashANTISMASHid, $tipoDB , "$tfmAsmash" , 0 , 0644 ;
-print "$! \nerror tie para $tfmAM \n" if ($handAM eq "");
 
 
 my %Input;
@@ -33,6 +16,30 @@ $Input{$pair} = $query->param($pair);
 
 print $query->header,
       $query->start_html(-style => {-src => '/EvoMining/html/css/tabla3.css'} );
+
+ #$tfm = "/var/www/newevomining/blast/BBH/hashMETCENTRAL22.db" ;
+ my $apacheCGIpath=$APACHE_CGI_PATH;
+ my $newickPATH="/opt/newick-utils-1.6/src";
+ my $apacheHTMLpath=$APACHE_HTML_PATH;
+ 
+ $genomes =$GENOMES; #from globals
+ $tfm = $TFM ; #from globals
+ $np_db=$NP_DB ; #from globals
+ 
+ #$genomes ="los30"; #
+ #$tfm = "hashMETCENTRAL$genomes.db"; 
+ 
+
+#exit(1);
+ 
+ $hand = tie  %hashMETCENTRAL, $tipoDB , "$tfm" , 0 , 0644 ;
+
+ #my $tfmAsmash= "$OUTPUT_PATH/hashANTISAMASandCF$GENOMES.db" ;
+my $tfmAsmash= "$OUTPUT_PATH/hashANTISAMASandCF.db" ;
+
+
+$handAM = tie my %hashANTISMASHid, $tipoDB , "$tfmAsmash" , 0 , 0644 ;
+print "$! \nerror tie para $tfmAM \n" if ($handAM eq "");
 
 $prenumFile=$ENV{'QUERY_STRING'};
 @arraynumFile=split(/&&/,$prenumFile);

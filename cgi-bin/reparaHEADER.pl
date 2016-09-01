@@ -92,7 +92,7 @@ $lista0[1] =2;
 ########################ANTISMASH###################################
 $antismash=$ANTISMASH; #from globals
 
-my $tfmAsmash= "$OUTPUT_PATH/hashANTISAMASandCF$GENOMES.db" ;
+my $tfmAsmash= "$OUTPUT_PATH/hashANTISAMASandCF.db" ;
 
 $handAM = tie my %hashANTISMASHid, $tipoDB , "$tfmAsmash" , $RWC , 0644 ;
 
@@ -225,7 +225,7 @@ bbhAfterUniq(@lista0);#INPUT los .uniq OUTPUT=BBH en /blasts con extension .bbh
 print "Done!\n";
 
 
-open (LOG, ">$OUTPUT_PATH/EvoMining.log") or die "$!";
+open (LOG, ">>$OUTPUT_PATH/EvoMining.log") or die "$!";
 print LOG "ReparaHEADER\tDONE\n";
 close LOG;
 

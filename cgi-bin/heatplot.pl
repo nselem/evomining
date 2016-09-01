@@ -547,9 +547,9 @@ for(my $y=1; $y<=$#{$tabla2[1]}; $y++){ #columnas******
 close SALE;
 close STDOUT;
 
-open (LOG, ">>$OUTPUT_PATH/EvoMining.log") or die " Not open LOG file $!";
-print LOG "Heatplot\tDONE\n";
-close LOG;
+open (LOGEV, ">>$OUTPUT_PATH/EvoMining.log") or die " Not open LOG file $!";
+print LOGEV "Heatplot\tDONE\n";
+close LOGEV;
 
 
 

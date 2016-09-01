@@ -63,7 +63,7 @@ sub createOutDir{
 		}
 	print "Ready output directory \n\n";
 	unless(-e "/var/www/html/EvoMining/exchange/$output_path/EvoMining.log"){
-		open (FILE,">/var/www/html/EvoMining/exchange/$output_path/EvoMining.Log");
+		open (FILE,">/var/www/html/EvoMining/exchange/$output_path/EvoMining.log");
 		print FILE "startEvoMining ";
 		close FILE;
 		}

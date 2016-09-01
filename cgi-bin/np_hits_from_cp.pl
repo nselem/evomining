@@ -281,10 +281,10 @@ if(!$prev_np){
        		$blast=system("/opt/blast/bin/blastp -db NPDB/$np_db.db -query $OUTPUT_PATH/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out  $OUTPUT_PATH/blast/$_\_ExpandedVsNp.blast") ;#  or die       "EERROOOR:  $?,$!,%d, %s coredump";
        		#$blast=`/opt/blast/bin/blastp -db NPDB/$np_db.db -query $OUTPUT_PATH/NewFASTASparaNP/$_ -outfmt 6 -num_threads 4 -evalue $eval -out $OUTPUT_PATH/blast/$_\_ExpandedVsNp.blast`;#" or die "EERROOOR:$?,$!,%d, %s coredump";
 		}#end while externo	
+
+             close BNP;
 	}# end if  np on LOG
 
-
-close BNP;
 #print "<h1>Done...</h1>"; ]
 
 system "touch $OUTPUT_PATH/prueba3";

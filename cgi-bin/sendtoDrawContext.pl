@@ -54,7 +54,7 @@ if($datas[3] ne ''){
 
 print qq |
 <html>
-( <head>
+ <head>
   <title>Contextos evoMining</title>
  </head>
  
