@@ -3,14 +3,17 @@ use warnings;
 
 
 ######## Inputs from user
-my $fileNames="RAST/RAST.ids"; ##File with genome ids RASt.ids
 open (ERROR, ">Error") or die $!;
 
 my $apacheHTMLpath="/var/www/html/EvoMining/exchange";
 my $Folder=shift @ARGV;
 chomp($Folder);
+my $genomeDB=$Folder;
+
+my @st=split(/\_/,$genomeDB);
+my $fileNames="RAST/$st[$#st]\Rast.ids";    #file with genome ids from RASt
+print "Rast File $fileNames\n";
 $Folder =~ s/\r|\s//g;
-chomp($Folder);
 
 my @gen_id;
 @gen_id=@ARGV;

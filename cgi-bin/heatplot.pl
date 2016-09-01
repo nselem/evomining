@@ -102,8 +102,8 @@ chomp($OUTPUT_PATH);
 
 
 
-$la="$OUTPUT_PATH/blast/seqf/tree";
-system "mkdir -p $OUTPUT_PATH/blast/seqf/tree";
+#$la="$OUTPUT_PATH/blast/seqf/tree";
+#system "mkdir -p $OUTPUT_PATH/blast/seqf/tree";
 system "mkdir -p $OUTPUT_PATH/FASTASparaNP";
 system "mkdir -p $OUTPUT_PATH/NewFASTASparaNP";
 

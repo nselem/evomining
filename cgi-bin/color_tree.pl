@@ -326,7 +326,6 @@ print qq¬
    }
    </script>
   </head>
-<br> path $out_for_apache/blast/seqf/tree/$numFile.pp.svg.new </br>
   <body>
 
   <!-- header -->

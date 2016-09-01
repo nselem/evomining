@@ -33,7 +33,7 @@ GetOptions(
 	'natural_db=s' => \(my $natural_db="MiBIG_DB.faa"),
         'central_db=s' => \(my $central_db="ALL_curado.fasta") ,
 	'genome_db=s' => \(my $genome_db="los17"),
-	'rast_ids=s' => \(my $rast_ids="RAST.ids"),
+	'rast_ids=s' => \(my $rast_ids="los17Rast.ids"),
 	'help'     =>   sub { HelpMessage(0) },
        ) or HelpMessage(1);
 
@@ -53,7 +53,7 @@ system ("sudo service apache2 start");
 sub createOutDir{
 	my $output_path=shift;
 	if (!-d "/var/www/html/EvoMining/exchange/$output_path"){
-		system("mkdir /var/www/html/EvoMining/exchange/$output_path");
+		system("mkdir -p /var/www/html/EvoMining/exchange/$output_path/blast/seqf/tree");
 		system ("chmod -R 777 /var/www/html/EvoMining/exchange/$output_path");
 		print "mkdir /var/www/html/EvoMining/exchange/$output_path has been created\n";
 		}
@@ -94,6 +94,7 @@ sub prepareDB{
 	my $rast_ids=shift;
 	my $import_p="/var/www/html/EvoMining/exchange";
 	my $moved_p="/var/www/html/EvoMining/cgi-bin";
+	my $ids_name="$genome\Rast.ids";
 
         if($genome ne "los17"){
                 if(!$rast_ids){
@@ -102,11 +103,12 @@ sub prepareDB{
                         }
                 else{
                         print "Genome and RAST DB will be actualized\n";
-                        if(!-e "$moved_p/RAST/$rast_ids"){
-				system( "ln -s $import_p/$rast_ids $moved_p/RAST/$rast_ids\n");
+
+                        if(!-e "$moved_p/RAST/$ids_name"){
+				system( "ln -s $import_p/$rast_ids $moved_p/RAST/$ids_name\n");
 				}
 			else {
-				print "$rast_ids file already exists!\n";
+				print "RAST/$ids_name file already exists!\n";
 				}
 			#system("for f in $import_p/$genome/*.faa\; do basename \$f \| while read UF \; do echo ln -s \$f $moved_p/RAST/\$UF\;done\; done");
 			system("for f in $import_p/$genome/*.faa\; do basename \$f \| while read UF \; do ln -s \$f $moved_p/RAST/\$UF\;done\; done");
@@ -124,7 +126,7 @@ sub prepareDB{
 			print "\n\n"; 
 			#print "pause\n\n"; my $pause=<STDIN>;
 			print "Fasta files will be converted to evo files\n";
-			system("ls DB/$genome/*.faa \| while read line\; do echo perl 1.1.Genome_RAST_to_Evo.pl \$line RAST/$rast_ids DB/$genome\; perl 1.1.Genome_RAST_to_Evo.pl \$line RAST/$rast_ids DB/$genome\;done");			## convert files
+			system("ls DB/$genome/*.faa \| while read line\; do echo perl 1.1.Genome_RAST_to_Evo.pl \$line RAST/$ids_name DB/$genome\; perl 1.1.Genome_RAST_to_Evo.pl \$line RAST/$ids_name DB/$genome\;done");			## convert files
 			print "Files have been converted to EvoMining format\n\n";
 
 			system("for f in DB/$genome/*.faa\; do mv \$f \$f.evo\; done");
@@ -158,6 +160,7 @@ sub editGlobals{
         my $np=shift;
         my $central=shift;
 
+        if ($genome){system("perl -p -i -e 's/GENOMES=\".+\"/GENOMES=\"$genome\"/ if /GENOMES/' globals.pm ");}
         if ($genome){system("perl -p -i -e 's/GENOMES=\".+\"/GENOMES=\"$genome\"/ if /GENOMES/' globals.pm ");}
         if ($np){system("perl -p -i -e 's/NP_DB=\".+\"/NP_DB=\"$np\"/ if /NP_DB/' globals.pm ");}
         if ($central){system("perl -p -i -e 's/VIA_MET=\".+\"/VIA_MET=\"$central\"/ if /VIA_MET/' globals.pm ");}
