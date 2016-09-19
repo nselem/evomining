@@ -143,14 +143,14 @@ sub prepareDB{
                         }
                 }
         if($central ne "ALL_curado.fasta"){
-                print "Natural products $central \n";
-                print "mv NP DB \n";
-                system( "ln -s $import_p/$central $moved_p/NP_DB/$central");
+                print "Central pathway $central \n";
+                print "mv Central pathway DB \n";
+                system( "ln -s $import_p/$central $moved_p/PasosBioSin/$central");
                 }
         if($np ne "MiBIG_DB.faa"){
-                print "Central Pathways $np\n";
-                print "mv central pathways DB\n";
-                system( "ln -s $import_p/$np $moved_p/VIA_MET/$np");
+                print "Natural Products $np\n";
+                print "mv Natural Products DB\n";
+                system( "ln -s $import_p/$np $moved_p/NP_DB/$np");
                 }
         }
 #____________________________________________________________________________
