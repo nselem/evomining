@@ -208,12 +208,12 @@ close HASHESOUT;
 print "Indexando base de datos CENTRAL MET VS GENOMES...\n";
 system "makeblastdb -dbtype prot -in $genomesOUT -out $genomesOUTDB";
 print "\nBlast1...\n";
-system "blastp -db $genomesOUTDB -query $MEtCentral -outfmt 6 -num_threads 4 -evalue 0.0001 -out $OUTPUT_PATH/blast/pscp$genomes.blast";
+system "blastp -db $genomesOUTDB -query $MEtCentral -outfmt 6 -num_threads 4 -max_target_seqs 10000 -evalue 0.0001 -out $OUTPUT_PATH/blast/pscp$genomes.blast";
 
 print "Indexando base de datos GENOMES VS CENTRAL MET...\n";
 system "makeblastdb -dbtype prot -in $MEtCentral -out $centralOUTDB";
 print "\nBlast2...\n";
-system "blastp -db $centralOUTDB -query $genomesOUT -outfmt 6 -num_threads 4 -evalue 0.0001 -out $OUTPUT_PATH/blast/vuelta$genomes.blast";
+system "blastp -db $centralOUTDB -query $genomesOUT -outfmt 6 -num_threads 4 -max_target_seqs 10000 -evalue 0.0001 -out $OUTPUT_PATH/blast/vuelta$genomes.blast";
 
 $lista0[0]="pscp$genomes.blast";
 $lista0[1]="vuelta$genomes.blast";
