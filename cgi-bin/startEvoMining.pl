@@ -150,7 +150,7 @@ sub prepareDB{
         if($np ne "MiBIG_DB.faa"){
                 print "Natural Products $np\n";
                 print "mv Natural Products DB\n";
-                system( "ln -s $import_p/$np $moved_p/NP_DB/$np");
+                system( "ln -s $import_p/$np $moved_p/NPDB/$np");
                 }
         }
 #____________________________________________________________________________
