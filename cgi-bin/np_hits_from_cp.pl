@@ -49,8 +49,8 @@ else {
 	exit;
 }
 
-if(!$prev_np){
-`/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db`;
+unless($prev_np){
+system("/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db");
 }
 #`/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db`;
 ####################################################################################
