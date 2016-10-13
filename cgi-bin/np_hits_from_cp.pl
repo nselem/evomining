@@ -49,10 +49,22 @@ else {
 	exit;
 }
 
-unless($prev_np){
-system("/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db");
+if(!$prev_np){
+`/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db`;
 }
 #`/opt/blast/bin/makeblastdb -in NPDB/$np_db -dbtype prot -out NPDB/$np_db.db`;
+###########33 Reading Natural products metadata if exists file;
+my %NP_META;
+if (-e "NPDB/$np_db.meta"){
+	open (NP_META, "NPDB/$np_db.meta")or die "Couldn't open $np_db.meta\n $!";
+	foreach my $line (<NP_META>){
+	chomp $line;
+	my @st=split(/\t/,$line);
+	$NP_META{$st[0]}=[$st[1],$st[2],$st[3],$st[4],$st[5]];
+#	print qq|$st[0]<br>@{$NP_META{$st[0]}} <br>|;
+#	print qq|#$st[0]!<br>|;
+	}
+}
 ####################################################################################
 my $oldid;
 ($eval,$score2,$oldid)=recepcion_de_archivo(); #Iniciar la recepcion del archivo
@@ -459,8 +471,23 @@ print qq |<td><input type="checkbox" name="$clave" checked> </td>|;
 print qq |<div ><td>$hashNUMVia{$PREarray[0]}</td></div>|;
 #print qq |<div ><td>$hashNUMVia{$PREarray[0]}-$PREarray[0]</td></div>|;
 #print qq |<div class="campo2"><td>$clave</td></div>|;
+my @st=split(/,/,$array[1]);
 $array[1]=~ s/\,/ \,/g;
-print qq |<div ><td width="40%">$array[1]</td></div>|;
+#print qq |<div ><td width="40%"> $#array[1]</td></div>|;
+print qq |<div ><td width="60%">|;
+
+foreach my $name (@st){
+	my @NPs=split(/_/,$name);
+#	foreach my $np (@NPs){	
+	if (-exists $NP_META{$NPs[0]}){
+		print qq| $NP_META{$NPs[0]}[4]:$NP_META{$NPs[0]}[3]:$NP_META{$NPs[0]}[1]<a href="http://mibig.secondarymetabolites.org/repository/$NPs[0]/index.html#cluster-1" target="_blank" onClick="window.open(this.href, this.target); return false;">$NP_META{$NPs[0]}[0]</a><br>|;
+	}
+	else{
+		print qq |$name <br>|;	
+		}
+}
+print qq|</td></div>|;
+
 print qq |</tr>|;
 }
 print qq |<input type="hidden" value="$OUTPUT_PATH" name="OUTPUT_PATH" >|;
