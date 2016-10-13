@@ -394,8 +394,8 @@ name="foma">
 <div class="subtitulo" ALIGN="center">Blast option:</div>
 	<div class="campo1">e-value:</div>
     <div class="campo-1"><textarea style="width: 65px; height: 25px;" cols="1" rows="1" name="evalue">0.0001</textarea></div>
-    <div class="campo2">Minimum Score:</div>
-    <div class="campo2-2"><textarea style="width: 50px; height: 25px;" cols="1" rows="1" name="score">100</textarea></div>
+    <div class="campo2"></div>
+    <div class="campo2-2"><textarea type="hidden" style="width: 50px; height: 25px;" cols="1" rows="1" name="score">100</textarea></div>
     <input type="hidden" name="pidfecha" value="$OUTPUT_PATH">
     <div class="boton"><button  value="Submit" name="Submit">SUBMIT</button></div>
 </table>
@@ -407,10 +407,27 @@ name="foma">
 close BLA;
 ###print  LOG "paso 1 filas $#tabla comunas $#{$tabla[1]}\n";
 #print "<h1>$tabla2[3][1]</h1>"; 
+
 print qq|<table cellpadding="1" cellspacing="0" class="tabla">|;
+print qq|<td ><div><span>Genomes</span></div></td>|;
+     for(my $y=1; $y<=$#{$tabla[1]}; $y++){# ciclo para etiquetas de las columnas
+        if(exists $hashCeros{$y}){
+         # print qq |<td  bgcolor="#585858"></td>|; #escribe division de vias en tabla
+             
+            print qq|<th class="rotate" ></th>|;
+    
+         }
+            $preTag=$tablanombrevia[0][$y];       
+		    @tag=split(/\//,$preTag);
+            print qq|<th class="rotate"><div><span>$tag[0]</span></div></th>|;
+       
+     }
+
+#print qq|<table cellpadding="1" cellspacing="0" class="tabla">|;
 #print "<tr>";
 $tope=$#tabla+1;
 for (my $x=0; $x<=$tope; $x++){#***filas****
+  
 #print LOG "$x--$hashOrdenNOMBRES2{$x}-$#{$tabla[1]}\n";
     if(!exists $hashNOMBRESActual{$x}){
        print NUEVO "$hashOrdenNOMBRES2{$x}\n";
@@ -432,8 +449,9 @@ print "<tr>";
         print qq|<td>//$hashOrdenNOMBRES2{$x}</td>|;
         
       }
-      
+    
   for(my $y=1; $y<=$#{$tabla[1]}; $y++){ #columnas******
+    
     if(!$tabla[$x][$y] ){
       $tabla[$x][$y]=0;
     }
