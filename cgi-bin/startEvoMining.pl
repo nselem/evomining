@@ -31,6 +31,7 @@ Corason - pass your inputs trough the command line!
 ################       get options ##############################################################
 GetOptions(
 	'natural_db=s' => \(my $natural_db="MiBIG_DB.faa"),
+	'meta_natural_db=s' => \(my $meta="MiBIG_DB.faa.meta"),
         'central_db=s' => \(my $central_db="ALL_curado.fasta") ,
 	'genome_db=s' => \(my $genome_db="los17"),
 	'rast_ids=s' => \(my $rast_ids="los17Rast.ids"),
@@ -39,12 +40,12 @@ GetOptions(
 
 ####################### end get options ###############################################3
 ######################### BEGIN  Main program ###########################################
-printInputs($natural_db,$central_db,$genome_db,$rast_ids);
+printInputs($natural_db,$central_db,$genome_db,$rast_ids, $meta);
 my $output_path="$central_db\_$natural_db\_$genome_db";
 createOutDir($output_path);
 editGlobals($genome_db,$natural_db,$central_db);
 
-prepareDB($genome_db,$natural_db,$central_db,$rast_ids);
+prepareDB($genome_db,$natural_db,$central_db,$rast_ids,$meta);
 system("perl reparaHEADER.pl");
 system ("sudo service apache2 start");
 ######################### END main program
@@ -75,6 +76,7 @@ sub printInputs{
         my $central=shift;
         my $genome=shift;
 	my $rast_ids=shift;
+	my $meta=shift;
 
 	print "\n\n\n\n";
 	print "##########################################\n";
@@ -84,6 +86,8 @@ sub printInputs{
 	print "Central DB: $central_db\n";
 	print "Natural Products: $natural_db\n";
 	print "Rast Ids: $rast_ids\n";
+	print "Meta: $meta\n";
+
 }
 
 #____________________________________________________________________________
@@ -92,6 +96,7 @@ sub prepareDB{
         my $np=shift;
         my $central=shift;
 	my $rast_ids=shift;
+	my $meta=shift;
 	my $import_p="/var/www/html/EvoMining/exchange";
 	my $moved_p="/var/www/html/EvoMining/cgi-bin";
 	my $ids_name="$genome\Rast.ids";
@@ -147,10 +152,14 @@ sub prepareDB{
                 print "mv Central pathway DB \n";
                 system( "ln -s $import_p/$central $moved_p/PasosBioSin/$central");
                 }
+	if ($meta ne "MiBIG_DB.faa.meta"){
+                system( "cp $import_p/$meta $moved_p/NPDB/$np.meta");
+		}
         if($np ne "MiBIG_DB.faa"){
                 print "Natural Products $np\n";
                 print "mv Natural Products DB\n";
-                system( "cp -s $import_p/$np $moved_p/NPDB/$np");
+                system( "ln -s $import_p/$np $moved_p/NPDB/$np");
+
                 }
         }
 #____________________________________________________________________________
