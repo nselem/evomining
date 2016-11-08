@@ -322,9 +322,14 @@ chomp;
 }
 close EXPPP;
 #----------------------end filtra por score--------------------------
+my @nonRec;
 
 system "ls $OUTPUT_PATH/blast/*_ExpandedVsNp.blast.2 > $OUTPUT_PATH/ls.ExpandedVsNp.blast2";
 open (EXP, "$OUTPUT_PATH/ls.ExpandedVsNp.blast2") or die $!;
+
+if (-e "$OUTPUT_PATH/hash.log"){
+system "rm $OUTPUT_PATH/hash.log";
+}
 while(<EXP>){
 chomp;
 #print "<h1>cat $_ |cut -f2 |sort -u >$_.recruitedUniq</h1>";
@@ -333,12 +338,27 @@ chomp;
     ##############weekend############### 
          system "cat $_ |cut -f2 |sort -u >$_.recruitedUniq"; #Si tiene texto el archivo extrae la colunma2 que contiene el nombre del NP
    }
+  else{
+	$_=~s/$OUTPUT_PATH\/blast\/(\d*)\.fasta_ExpandedVsNp\.blast\.2//;
+	my $nam=$1;
+	push(@nonRec,$nam);
+	system "cp $OUTPUT_PATH/NewFASTASparaNP/$nam.fasta $OUTPUT_PATH/blast/$nam.concat.fasta";
+	#print "$nam has been copied";
+	my  $reg=$hashnombreVIA{$nam};
+        my $reg2="$nam===$reg";
+        #print "reg2 $reg2 <br>";
+        push(@mostrar, $reg2);
+	open (RECPR, ">>$OUTPUT_PATH/hash.log") or die $!;
+	print RECPR "$nam===$reg\n";
+	close RECPR;
+	}
 }
 close EXP;
+
 system "ls $OUTPUT_PATH/blast/*.recruitedUniq > $OUTPUT_PATH/ls.recruitedUniq ";
 
 open (REC, "$OUTPUT_PATH/ls.recruitedUniq") or die $!;
-open (RECPR, ">$OUTPUT_PATH/hash.log") or die $!;
+open (RECPR, ">>$OUTPUT_PATH/hash.log") or die $!;
 
 while(<REC>){
 chomp;
@@ -360,7 +380,8 @@ chomp;
    if($cad){
     print RECPR "$sin===$reg\n";
    $reg2="$sin===$reg";
-    
+#  print "cad $sin reg2 $hashnombreVIA{$sin} <br>"; 
+ #  print "cad $cad <br>"; 
      push(@mostrar, $reg2);
    }
    
@@ -370,15 +391,15 @@ chomp;
 
  $sizeFIle= -s $_;
  if($sizeFIle > 0){
-  open(OUTFASTA,">$_.fasta") or die $!;
-  $nam=$_;
-  $nam =~ s/\.fasta_ExpandedVsNp\.blast\.2\.recruitedUniq//;
-  #system "touch $nam.nanana";
-  push(@nom, $nam);
- }
+  	open(OUTFASTA,">$_.fasta") or die $!;
+  	$nam=$_;
+  	$nam =~ s/\.fasta_ExpandedVsNp\.blast\.2\.recruitedUniq//;
+  	#system "touch $nam.nanana";
+  	push(@nom, $nam);
+ 	}
  else {
-  next;
- }
+  	next;
+ 	}
 #open(NPDB, "/var/www/newevomining/NPDB/Natural_products_DB.prot_fasta")or die $!; 
 #open(NPDB, "/var/www/newevomining/NPDB/NATURAL_PRODUCTS_DB3.fasta")or die $!;
 open(NPDB, "NPDB/$np_db")or die $!;
@@ -447,6 +468,8 @@ system "cat $OUTPUT_PATH/NewFASTASparaNP/$tempor.fasta $x.fasta_ExpandedVsNp.bla
 #$claveee="si llegaaaaaaaa";
 close CONCAT;
 close CONCATOUT;
+
+
 open (MAMA, ">mama.log")or die $!;
 #print "<h1>Done...ultimo</h1>"; 
 #print "Content-type: text/html\n\n";

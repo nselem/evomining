@@ -214,12 +214,17 @@ foreach my $cc (@dat){
  system "nw_distance -n $OUTPUT_PATH/blast/seqf/tree/$cc.tree > $OUTPUT_PATH/blast/seqf/tree/distance.$cc";
  $dist="distance.$cc";
  #$fileNamee=findDistance2($dist,$cc);
- $namee=findDistance2($dist,$cc);
+if (-e "$OUTPUT_PATH/blast/$cc.fasta_ExpandedVsNp.blast.2.recruitedUniq"){
+ 	$namee=findDistance2($dist,$cc);
+       	system "nw_display -w 5600 -sr -S -v 100 -l 'font-size:x-small' -b 'visibility:hidden' -o $OUTPUT_PATH/blast/seqf/tree/ornament.$cc $OUTPUT_PATH/blast/seqf/tree/$cc.tree >$OUTPUT_PATH/blast/seqf/tree/$cc.p.svg";
+}
+else{
+       	system "nw_display -w 5600 -sr -S -v 100 -l 'font-size:x-small' -b 'visibility:hidden' $OUTPUT_PATH/blast/seqf/tree/$cc.tree >$OUTPUT_PATH/blast/seqf/tree/$cc.p.svg";
+}
  #$namee=CSSmap($fileNamee);
  #open(GO, ">/var/www/newevomining/blast/seqf/checar");
  #print "nw_display -w 5600 -sr -S -v 100 -b 'visibility:hidden' -c $namee /tree$cc.tree >$cc.p.svg";
  #########weekend######### 
- system "nw_display -w 5600 -sr -S -v 100 -l 'font-size:x-small' -b 'visibility:hidden' -o $OUTPUT_PATH/blast/seqf/tree/ornament.$cc $OUTPUT_PATH/blast/seqf/tree/$cc.tree >$OUTPUT_PATH/blast/seqf/tree/$cc.p.svg";
  #system "nw_display -w 5600 -sr -S -v 100 -b 'visibility:hidden' -c ../distance.9.only.cssmap 9.tree >9color2.svg"
 }
 
