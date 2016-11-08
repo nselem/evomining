@@ -250,7 +250,9 @@ print qq |<div><td >tree</td></div>|;
     foreach my $xc (@dat){
         if($array2[0] eq $xc){
           $onlyD="distance.$xc.only";
-          open(XT, "$OUTPUT_PATH/blast/seqf/tree/$onlyD") or die "$!,$onlyD";
+        if (-e "$OUTPUT_PATH/blast/seqf/tree/$onlyD"){  
+		open(XT, "$OUTPUT_PATH/blast/seqf/tree/$onlyD") or die "$!,$onlyD";
+	}
           
 	  while($line=<XT>){
               chomp($line);
