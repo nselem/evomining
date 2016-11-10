@@ -72,6 +72,7 @@ Choose genes by cliking on its names</p>
 |;
 
 ## Para mensajes insertar en html
-#<br>$filee Entorno <br>Input $Input{'keywords'}<br>
 #<center><p>Select genomic context *$Input{'keywords'}*:<br>Enter the genes that you wish to see separated by spaces.</p> 
+#<br>$filee Entorno <br><br>Input $Input{'keywords'}<br>
+#<br><br>cad $cad<br>
   

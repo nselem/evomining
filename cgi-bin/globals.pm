@@ -6,7 +6,7 @@ $APACHE_HTML_PATH="/var/www/html/EvoMining/html";
 
 
 #---------Genomes names made by  reparaHEADER.pl-----------------------------
-$GENOMES="los17.fasta"; #reparaHEADER.pl
+$GENOMES="los17"; #reparaHEADER.pl
 $boolGENOMES_DB=1;
 #----------------------------------------------------------------------------
 

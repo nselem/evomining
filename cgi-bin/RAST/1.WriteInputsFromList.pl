@@ -1,5 +1,14 @@
-use strict;
+#use strict;
 use warnings;
+
+use globals;
+use Fcntl ; use DB_File ; $tipoDB = "DB_File" ; $RWC = O_CREAT|O_RDWR;
+
+
+ #my $tfmAsmash= "$OUTPUT_PATH/hashANTISAMASandCF$GENOMES.db" ;
+my $tfmAsmash= "$OUTPUT_PATH/hashANTISAMASandCF.db" ;
+$handAM = tie my %hashANTISMASHid, $tipoDB , "$tfmAsmash" , 0 , 0644 ;
+print "$! \nerror tie para $tfmAM \n" if ($handAM eq "");
 
 
 ######## Inputs from user
@@ -58,7 +67,15 @@ sub ContextArray{
 	#print "Total $sizeFile";
 
 	$CONTEXT[0]=[$hit0,$start0,$stop0,$dir0,$func0];
-	print FILE "$CONTEXT[0][1]\t$CONTEXT[0][2]\t$CONTEXT[0][3]\t1\t$refNAMES->{$peg}\t$CONTEXT[0][4]\t$CONTEXT[0][0]\n";
+			my $AntiID=$CONTEXT[$count][0];
+			$AntiID=~s/\.peg//;
+			$AntiID=~s/fig\|//;
+				if($hashANTISMASHid{$AntiID} ne ""){
+				#changeStroke; color =2
+				print FILE "$CONTEXT[$count][1]\t$CONTEXT[$count][2]\t$CONTEXT[$count][3]\t3\t#$refNAMES->{$peg}#\tAntiSMASH#$hashANTISMASHid{$AntiID}#$CONTEXT[$count][4]\t$CONTEXT[$count][0]\n";		
+				}
+				else{
+				print FILE "$CONTEXT[$count][1]\t$CONTEXT[$count][2]\t$CONTEXT[$count][3]\t1\t$refNAMES->{$peg}\t$CONTEXT[$count][4]\t$CONTEXT[$count][0]\n";		}
 	my $count=1;	
 	my @sp=split(/\./,$peg);
 	my $genId=$sp[2];
@@ -76,7 +93,16 @@ sub ContextArray{
 				}
 			if ($contig0 eq $contig and $i!=$genId){
   				#print "$contig0 $contig\n";
-				print FILE "$CONTEXT[$count][1]\t$CONTEXT[$count][2]\t$CONTEXT[$count][3]\t0\t$refNAMES->{$peg}\t$CONTEXT[$count][4]\t$CONTEXT[$count][0]\n";		
+				my $AntiID=$CONTEXT[$count][0];
+				$AntiID=~s/\.peg//;
+				$AntiID=~s/fig\|//;
+				if($hashANTISMASHid{$AntiID} ne ""){
+				#changeStroke; color =2
+				$hashANTISMASHid{$AntiID}=~s/\tr//;
+				print FILE "$CONTEXT[$count][1]\t$CONTEXT[$count][2]\t$CONTEXT[$count][3]\t2\t#$refNAMES->{$peg}#\tAntiSMASH#$hashANTISMASHid{$AntiID}#$CONTEXT[$count][4]\t$CONTEXT[$count][0]\n";		
+				}
+				else{
+				print FILE "$CONTEXT[$count][1]\t$CONTEXT[$count][2]\t$CONTEXT[$count][3]\t0\t#$refNAMES->{$peg}#\t$CONTEXT[$count][4]\t$CONTEXT[$count][0]\n";		}
 				$count++;
 				}
 			}

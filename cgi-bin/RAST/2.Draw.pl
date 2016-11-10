@@ -194,8 +194,18 @@ sub arrow{
 		my $path = $svg->get_path(x => [$u1+$t, $u2+$t, $u3+$t,$u4+$t,$u5+$t],   y => [$v1+$tv, $v2+$tv, $v3+$tv,$v4+$tv,$v5+$tv],  -type => 'polygon');
 
 		# Then we use that data structure to create a polygon
+		if($color==1 or $color==0){
 		$svg->polygon(  %$path,title=>"$desc",style => {'fill'=> "rgb($color1,$color2,$color3)",'stroke' => 'black',
 			'stroke-width' =>1,'stroke-opacity' =>  1,'fill-opacity'=> 1,},);
+			}
+		if($color==2 ){
+		$svg->polygon(  %$path,title=>"$desc",style => {'fill'=> "rgb(150,170,174)",'stroke' => 'violet',
+			'stroke-width' =>2,'stroke-opacity' =>  1,'fill-opacity'=> 1,},);
+			}
+		if($color==3 ){
+		$svg->polygon(  %$path,title=>"$desc",style => {'fill'=> "rgb(144,225,238)",'stroke' => 'violet',
+			'stroke-width' =>2,'stroke-opacity' =>  1,'fill-opacity'=> 1,},);
+			}
 		}
 	}
 

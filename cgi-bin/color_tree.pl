@@ -113,8 +113,8 @@ while (<LABELS>){
   
        if(exists $hashANTISMASHid{$giA[1]}){
          $keyAM="$giA[1]"."|"."$giA[$#giA]";
-	  $antSMASHstring=$antSMASHstring.'"stroke-width:7; stroke:cyan" Individual '.$keyAM."\n";
-          $antSMASHcircle=$antSMASHcircle. qq|"<circle style='fill:cyan;stroke:black' r='9'/>" I $keyAM\n|;
+	  $antSMASHstring=$antSMASHstring.'"stroke-width:7; stroke:cyan" Individual '.$keyAM."--$hashANTISMASHid{$giA[1]}\n";
+          $antSMASHcircle=$antSMASHcircle. qq|"<circle style='fill:cyan;stroke:black' r='9'/>" I $keyAM--$hashANTISMASHid{$giA[1]} \n|;
          
        }
    
@@ -145,8 +145,16 @@ while (<LABELS>){
             #push(@QC, $ALL_ids);
             }
              else{
-	     	  print OUTLABELS "$_	$ALL_ids\n";
-               #
+	     	   if(exists $hashANTISMASHid{$giA[1]}){
+                       print OUTLABELS "$_ $ALL_ids--$hashANTISMASHid{$giA[1]}\n";
+
+                    }
+                    else{
+
+                       print OUTLABELS "$_	$ALL_ids\n";
+               
+                    }
+#
              }
     	   # print OUTLABELS "$_	$ALL_ids\n";
 

@@ -2,7 +2,7 @@
 use strict;
 ## It is asumed that the svg is parsed before to s/>/>\n/
 
-my $file= $ARGV[0];
+my $file= $ARGV[0]; ##$OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg
 my @parts=split("blast",$file);
 
 
@@ -77,6 +77,7 @@ sub NewSvg{
 				$previous="";
 				}
 			else{			
+				if($ID=~/--/){$ID=~s/--.+//;}
 				$ID=~s/\<\/text\>//;
 				$line =~ s/\<\/text\>/\<\/title\>$ID\<\/text\>\<\/a\>/;
 				$previous=~s/XXXX/$ID/;
