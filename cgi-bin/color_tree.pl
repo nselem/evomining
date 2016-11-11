@@ -92,10 +92,6 @@ open (LABELS, "$OUTPUT_PATH/blast/seqf/tree/$numFile.labels")or die $!;
 open (OUTLABELS, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.mapp")or die $!;
 
 
-  
-
-
-
 $cuentaNum=0;
 while (<LABELS>){
     chomp;
@@ -113,8 +109,8 @@ while (<LABELS>){
   
        if(exists $hashANTISMASHid{$giA[1]}){
          $keyAM="$giA[1]"."|"."$giA[$#giA]";
-	  $antSMASHstring=$antSMASHstring.'"stroke-width:7; stroke:cyan" Individual '.$keyAM."--$hashANTISMASHid{$giA[1]}\n";
-          $antSMASHcircle=$antSMASHcircle. qq|"<circle style='fill:cyan;stroke:black' r='9'/>" I $keyAM--$hashANTISMASHid{$giA[1]} \n|;
+	  $antSMASHstring=$antSMASHstring.'"stroke-width:7; stroke:cyan" Individual '.$keyAM."\n";
+          $antSMASHcircle=$antSMASHcircle. qq|"<circle style='fill:cyan;stroke:black' r='9'/>" I $keyAM\n|;
          
        }
    
@@ -144,17 +140,16 @@ while (<LABELS>){
              push(@QC, $METcentral);
             #push(@QC, $ALL_ids);
             }
+	     elsif($giA[0]=~/CENTRAL/){
+		print OUTLABELS "$_	$giA[0]|$giA[3]\n";
+		$keyCENT=$giA[0]."|".$giA[3];
+		$CENTRALcircle=$CENTRALcircle. qq|"<circle style='fill:orange;stroke:black' r='9'/>" I $keyCENT\n|; ## Circle for seed central páthway
+	  	$CENTRALstring=$CENTRALstring.'"stroke-width:7; stroke:orange" Individual '.$keyCENT."\n";
+		}
              else{
-	     	   if(exists $hashANTISMASHid{$giA[1]}){
-                       print OUTLABELS "$_ $ALL_ids--$hashANTISMASHid{$giA[1]}\n";
-
-                    }
-                    else{
-
-                       print OUTLABELS "$_	$ALL_ids\n";
-               
-                    }
-#
+	     	  print OUTLABELS "$_	$ALL_ids\n";
+		#  	  print "CENTR ?? $_	$ALL_ids\n";
+               #
              }
     	   # print OUTLABELS "$_	$ALL_ids\n";
 
@@ -176,10 +171,11 @@ foreach my $cc (@QC){
   #next;
  }
  print EDIT $NPc;
- print EDIT qq|"<circle style='fill:red;stroke:black' r='6'/>" I $cc|;
+ print EDIT qq|"<circle style='fill:red;stroke:black' r='6'/>" I $cc|; ## circle for CEntral pathway
  print EDIT "\n";
 }
 print EDIT $antSMASHcircle;
+print EDIT $CENTRALcircle;
 close EDIT;
 
 open (MAP, "$OUTPUT_PATH/blast/seqf/tree/ornament.$numFile") or die $!;
@@ -205,6 +201,7 @@ while(<MAP>){
  print OUTMAP "$_\n";
 }
 print OUTMAP $antSMASHstring;
+print OUTMAP $CENTRALstring;
 close OUTMAP;
 close MAP;
 #----------------------- analiza KR con nw_clade-------
@@ -270,10 +267,11 @@ system "nw_rename -l $OUTPUT_PATH/blast/seqf/tree/$numFile.tree $OUTPUT_PATH/bla
 #################### Nelly agregado prueba Feb 16 ######################
 ##########################################################################
 system "mkdir $OUTPUT_PATH";
- `perl -p -i -e 's/>/>\n/g' $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg`;
- `rm $OUTPUT_PATH/$numFile.idForcontext`;
+ `perl -p -i.back -e 's/>/>\n/g' $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg`;
+ 
+`rm $OUTPUT_PATH/$numFile.idForcontext`;
  `perl $apacheCGIpath/blast/seqf/tree/zoom/ScaleSvg.pl $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg `;
-
+#system("cp $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg.new");
 # system "cp $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg.new $OUTPUT_PATH/$numFile.pp.svg.new";
 
 ########################################33 Fin Nelly ##########################3

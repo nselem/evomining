@@ -192,6 +192,8 @@ chomp;
   # print CHECK "$_\n"; 
     @viaPaso= split (/\|/, $_);
     $llaveViaPaso="$viaPaso[0]_$viaPaso[1]";
+
+ #	print "Cuenta $viaPaso[0]_$viaPaso[1] <br>"; 
    #  print CHECK "-$llaveViaPaso\n";
      if(!exists $hashViaPaso{$llaveViaPaso}){ 
     #  print CHECK "PASOOOOOO$llaveViaPaso\n";
@@ -210,8 +212,16 @@ chomp;
      # print CHECK "$cuantasViasvan-$llaveViaPaso -aa-->  $cuentaVia ===$hashViaPaso{$llaveViaPaso} ---- $viaPaso[2]\n";
       $cuentaVia++;
       $ViaAnterior=$viaPaso[0];
-     }     
-
+     }
+    $hashCP{ $hashViaPaso{$llaveViaPaso}}=$hashCP{$hashViaPaso{$llaveViaPaso}}.">CENTRAL".$_."\n";     
+    # $hashCP{'1'}=$hashCP{'1'}.$_."\n";
+# 	print "Cuenta $cuentaVia <br>"; 
+ #	print "Cuantas $cuantasViasvan <br>"; 
+  }
+  else{
+      $hashCP{$hashViaPaso{$llaveViaPaso}}=$hashCP{$hashViaPaso{$llaveViaPaso}}.$_."\n";
+  #print " $hashCP{$hashCeros{$cuentaVia}}"; 
+#$hashCP{'1'}=$hashCP{'1'}.$_."\n";
   }
 
 }
@@ -554,6 +564,12 @@ for(my $y=1; $y<=$#{$tabla2[1]}; $y++){ #columnas******
       }
    }#end while
   
+foreach my $x (keys %hashCP){
+       open (FASTA, ">>$OUTPUT_PATH/blast/$x.central") or die $!;
+       print FASTA "$hashCP{$x}\n";
+      # print " key $x *********$hashCP{$x}\n";
+       close FASTA;
+}
    
    close FAST;
    

@@ -17,7 +17,7 @@ use globals;
 #system "mkdir -p /var/www/html/EvoMining/cgi-bin/blast/seqf/tree";
 ## Faltaba OUTPUT_PATH entre newevomining y blast
 ## Lo cree a mano
-my $np_db=$NP_DB; 
+
 
 my $tfm2 = "$OUTPUT_PATH/mi_hashNUMVia.db" ;
 $hand2 = tie my %hashNUMVia, $tipoDB , "$tfm2" , 0 , 0644 ;
@@ -37,20 +37,6 @@ $color[6]="#A5DF00";
 $color[6]="#045FB4";
 $color[8]="#045FB4";
 ######weekend#######
-
-################################## Natural Products name
-my %NP_META;
-if (-e "NPDB/$np_db.meta"){ ## np_db from globals
-	open (NP_META, "NPDB/$np_db.meta")or die "Couldn't open $np_db.meta\n $!";
-	foreach my $line (<NP_META>){
-	chomp $line;
-	my @st=split(/\t/,$line);
-	$NP_META{$st[0]}=[$st[1],$st[2],$st[3],$st[4],$st[5]];
-#	print qq|$st[0]<br>@{$NP_META{$st[0]}} <br>|;
-#	print qq|#$st[0]!<br>|;
-	}
-}
-###############################################
 #system "rm /var/www/newevomining/blast/seqf/*only*";
 print $query->header,
       $query->start_html(-style => {-src => '/EvoMining/html/css/tabla2.css'} );
@@ -102,7 +88,8 @@ align();
 sub align{
 foreach my $c (@dat){
   
-    ###########weekend###############  
+    ###########weekend############### 
+    system("cat $OUTPUT_PATH/blast/$c.central >>$OUTPUT_PATH/blast/$c.concat.fasta");	 
      system "/opt/muscle/muscle -in $OUTPUT_PATH/blast/$c.concat.fasta -out $OUTPUT_PATH/blast/$c.aln";
 
   if($c ne 'Submit' and $c ne '' and  $c ne ' '){ 
@@ -292,20 +279,14 @@ print qq |<div><td >tree</td></div>|;
 	     print qq |<td>|;
 	     print qq| <table >|;
 	    foreach my $x (@gisV){
-	       if($x =~ /gi/ or $x eq ""){
+	       if($x =~ /gi/){
 	         next;
 	       }
-	       @NPs=split(/_/,$x);
-		if (-exists $NP_META{$NPs[0]}){
-			print qq| $NP_META{$NPs[0]}[4]:$NP_META{$NPs[0]}[3]:$NP_META{$NPs[0]}[1]<a href="http://mibig.secondarymetabolites.org/repository/$NPs[0]/index.html#cluster-1" target="_blank" onClick="window.open(this.href, this.target); return false;">$NP_META{$NPs[0]}[0]</a><br>|;
-			}
-		else{
-        	       print qq |<div ><a href="http://mibig.secondarymetabolites.org/repository/$NPs[0]/index.html#cluster-1" target="_blank" onClick="window.open(this.href, this.target); return false;"> $x</a></div>|;
-	}	     
-
-  
+	       @cleanNP=split(/_/,$x);
+	       
 	      # print qq |<tr>|;
 	       #print qq |<div class="campo2"><td>$acum</td></div>|;
+               print qq |<div ><a href="http://mibig.secondarymetabolites.org/repository/$cleanNP[0]/index.html#cluster-1" target="_blank" onClick="window.open(this.href, this.target); return false;">$x</a></div>|;
 	       #print qq |<div><td>$x</td></div>|;
 	       
 	       #print qq |<div><td >--$desc[$conta]++</td></div>|;
