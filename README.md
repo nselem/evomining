@@ -33,22 +33,19 @@ Test your docker engine with the command:
 
 ## 2 Run evomining image  
 
-`docker run -i -t -p 80:80 nselem/newevomining /bin/bash  `
+#1 Run evomining image
+ `docker run -i -t -v /home/yourvolume:/var/www/html/EvoMining/exchange -p 80:80 nselem/newevomining:latest /bin/bash`
 
-### 2.1 Start apache  
-`sudo service apache2 start  `
-Note: if you have your apache on port 80, just switch your local port to 8080 or another in order that EvoMining can run. 
-  
-### 3 View your results  
-On your browser go to:
-`http://localhost/EvoMining/html/index.html`   
+#2 Set databases  
+`perl startevomining -g mygenomes -r myRastIds`  
 
-### 4 Setdatabases   (In construction)
-You can change your data base, search for the steps at the wiki.  
-`vim globals $GENOMES="los17"  `
-run reparaheader :walking:   
-`perl reparaHEADER.pl  `  
-
+#3 View your results
+If you are running EvoMining on your local machine.   
+`http://localhost/html/EvoMining/index.html`   
+   
+or, if you are running EvoMining on a remote machine.   
+`http://yourip/html/EvoMining/index.html`  
+and follow the steps.  
 
 ### curl installation
 - `$ which curl`
