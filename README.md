@@ -12,7 +12,7 @@ Follow the steps, and type the commands into your terminal, do not type $.
 EvoMining runs on docker, if you have docker engine installed skip this step.  
 
 `$ curl -fsSL https://get.docker.com/ | sh `  
-*if you don’t have curl search on this document curl installation  
+*if you don’t have curl follow [Curl installation)(curl-installation)
 Then type:  
     `$ sudo usermod -aG docker your-user`  
 Remember to substitute your-user with your user name    
@@ -51,7 +51,7 @@ or, if you are running EvoMining on a remote machine.
 `http://yourip/html/EvoMining/index.html`  
 and follow the steps.  
 
-### curl installation
+### Curl installation
 - `$ which curl`
 - `$ sudo apt-get update`
 - `$ sudo apt-get install curl`
