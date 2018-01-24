@@ -3,13 +3,13 @@
 ## EvoMining Installation guide
 
 0. Install docker engine   
-1. Download nselem/newevomining 
+1. Download nselem/newevomining docker image  
 2. Run EvoMining    
 
 Follow the steps, and type the commands into your terminal, do not type $.  
 
 ### 1. Install docker engine  
-EvoMining runs on docker, if you have docker engine installed skip this step. This are Linux minimal docker installation guide, if you don't use Linux or you look for a detailed tutorial on Linux/Windows/Mac Docker engine installation please consult [Docker getting Starting] (https://docs.docker.com/linux/step_one/).  
+EvoMining runs on docker, if you have docker engine installed skip this step. This are Linux minimal docker installation guide, if you don't use Linux or you are looking for a detailed tutorial on Linux/Windows/Mac docker engine installation please consult [Docker getting Starting](https://docs.docker.com/linux/step_one/).  
 
 `$ curl -fsSL https://get.docker.com/ | sh `  
 *if you don’t have curl search on this document curl installation  
