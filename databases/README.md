@@ -11,9 +11,9 @@ To use myRAST docker image for the first time download the docker image from the
 Create a folder genome-DB and download there the aminoacid and annotation files from RAST servers by typing:  
 `cd genome-DB`  
 `svr_retrieve_RAST_job <user> <password> <jobId> table_txt > $<jobId>.txt`  
-`svr_retrieve_RAST_job <user> <password> <jobId> amino_acid > $<jobId>.faa`  
-Note: To optimize uploading/downloading time by interacting with several genomes on batch follow directions at https://github.com/nselem/myrast.  
-
+`svr_retrieve_RAST_job <user> <password> <jobId> amino_acid > $<jobId>.faa`    
+Note: To optimize uploading/downloading time by interacting with several genomes on batch 
+`cut -f1 Rast_ID | while read line; do svr_retrieve_RAST_job <user> <password> $line amino_acid > $line.txt ; done`  
 
 # Constructing custom genomic-DB
 
