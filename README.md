@@ -1,13 +1,15 @@
-# Evomining using docker image:
+# Evomining docker image:
 ========================================
 ## EvoMining Installation guide
 
-0. Install docker engine   
-1. Download nselem/newevomining docker image  
-2. Run EvoMining    
+1. Install docker engine   
+2. Download nselem/newevomining docker image  
+3. Run EvoMining    
 
 Follow the steps, and type the commands into your terminal, do not type $.  
-
+   
+---
+    
 ### 1. Install docker engine  
 EvoMining runs on docker, if you have docker engine installed skip this step.  
 
@@ -15,8 +17,8 @@ EvoMining runs on docker, if you have docker engine installed skip this step.
 *if you don’t have curl follow [Curl installation](#curl-installation)  
   
 Then type:  
-    `$ sudo usermod -aG docker your-user`  
-Remember to substitute your-user with your user name    
+    `$ sudo usermod -aG docker <your-user>`  
+Remember to substitute <your-user> with your user name    
 Example: `nsm@Leia`  
 User: nsm    
 
@@ -30,28 +32,50 @@ You may need to restart your computer and not just log out from your session in 
 Test your docker engine with the command:    
 `$ docker run hello-world`    
 
-### 1 Download EvoMining images from DockerHub  
+---  
+  
+### 2 Download EvoMining images from DockerHub  
+Pull evomining docker image from dockerHub with the following command:   
 `$ docker pull nselem/newevomining:latest  `    
   
 ##### Important    
-`docker pull ` may be slow depending on your internet connection, because nselem/evodivmet docker-image is being downloaded, its only this time won’t happen again.    
+`docker pull ` may be slow depending on your internet connection, at this step nselem/newevomining docker-image is being downloaded. Pull is run only once to download EvoMining images.
 
-## 2 Run evomining image  
+It is posible to check that EvoMining images is installed by typing:  
+`$ docker images`    
+> REPOSITORY           |TAG           |IMAGE ID        |CREATED       |SIZE     |
+>----------------------|--------------|----------------|--------------|---------|
+> nselem/newevomining  | latest       |  954ca43b8a23  |4 months ago  | 2.58GB  |
+   
+---   
+   
+## 3 Run evomining image  
 
-#1 Run evomining image
- `docker run -i -t -v /home/yourvolume:/var/www/html/EvoMining/exchange -p 80:80 nselem/newevomining:latest /bin/bash`
+### 3.1 Run evomining image
+Place yourself at your working directory.    
+ `$ docker run -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 80:80 nselem/newevomining:latest /bin/bash`
 
-#2 Set databases  
-`perl startevomining -g mygenomes -r myRastIds`  
+### 3.2 Set databases  
+Initialize EvoMining pipeline on the interactive shell of the EvoMining docker image.  
+To run a default data included on docker distribution use:  
+`# perl startEvoMining.pl`  
+  
+To run EvoMining with your own databases use the modifiers:  
+`# perl startEvoMining.pl -g <genome-DB> -r <myRastIds> -c <central-DB> -n <natural-DB>`  
 
-#3 View your results
+Or follow the example tutorial.    
+
+### 3.3 View your results  
+Open EvoMining web interface and follow the steps until the tree visualization.  
 If you are running EvoMining on your local machine.   
 `http://localhost/html/EvoMining/index.html`   
    
 or, if you are running EvoMining on a remote machine.   
-`http://yourip/html/EvoMining/index.html`  
-and follow the steps.  
+`http://<yourip>/html/EvoMining/index.html`  
 
+
+---   
+  
 ### Curl installation
 - `$ which curl`
 - `$ sudo apt-get update`
