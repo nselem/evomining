@@ -67,6 +67,7 @@ RUN service apache2 start
 
 RUN cp /opt/Gblocks_0.91b/Gblocks /var/www/html/EvoMining/cgi-bin/.
 RUN cpanm IO::Tee
+RUN cpanm Bio::SeqIO
 WORKDIR /var/www/html/EvoMining/cgi-bin
 #COPY . /var/www/html
 #CMD ["/var/www/run_apache.sh"]
