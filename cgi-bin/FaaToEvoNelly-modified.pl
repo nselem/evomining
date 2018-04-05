@@ -11,15 +11,17 @@ my $outputpath=$ARGV[2];
 my @st0=split('/',$file);
 my $genoId=$st0[$#st0];
 $genoId=~s/\.faa//;
-my $txtFile=$file;
+my $txtFile="RAST/$genoId\.txt";
 $txtFile=~s/faa/txt/;
 my $temp=`grep $genoId $rastFile`;
-system ("echo grep $genoId $rastFile");
+#system ("echo grep $genoId $rastFile");
+#print "output path $file.evo\n";
+#my $pause=<STDIN>;
 chomp $temp;
 my @st=split(/\t/,$temp);
 my $orgName=$st[2];
 print "OrgName $orgName\n";
-my $pause=<STDIN>;
+print "text file $txtFile";
 
 my %ANOTATION;
 ##########################
@@ -32,34 +34,37 @@ foreach my $line (<FILE>){
 	chomp $line;
 	#print "Line $line\n";
 	my @st=split(/\t/,$line);
-	$st[1]=~s/\|/_/g;
+	$st[1]=~s/fig\|//g;
+#	$st[1]=~s/\.peg\./_/g;
+#	$st[1]=~s/\./_/g;
 	$ANOTATION{$st[1]}=$st[7];
 	#print "$st[1]-> $st[7]\n";
-	#print "$st[1]#$ANOTATION{$st[1]}!\n";
-	#my $pause=<STDIN>;
+	print "$st[1]#$ANOTATION{$st[1]}!\n";
 	
 	}
 
 $seqio_obj = Bio::SeqIO->new(-file => "$file",  -format => "fasta" );
-my $out= Bio::SeqIO->new(-file=> ">$outputpath\.evo",-format=> 'Fasta');
+my $out= Bio::SeqIO->new(-file=> ">$file\.evo",-format=> 'Fasta');
 
 while( my $seq = $seqio_obj->next_seq ) {
 	my $ID=$seq->id;
-	#print "$ID \n";
+	print "ID: $ID \n";
 	my $genId=$ID;
-	#print "ID $ID\n";
-	$ID=~s/\|/_/g;
+	$ID=~s/fig\|//g;
+	#print "ID: #$ID#\n";
 	$genId=~s/.peg//;
 	$genId=~s/fig\|//;
-	#print "genId $genId\n";
+	#print "genId: #$genId#\n";
 
         my @st=split(/\./,$genId);
-        #print "OrgName $orgName\n";
+        #print "OrgName: $orgName\n";
 	my @NCBI=split(/\s/,$orgName);
 	#foreach my $part (@NCBI){print "NCBI $part,\n";} 
 	my $ncbi=$NCBI[$#NCBI];
-	#print "ncbi $ncbi\n";
+	#print "ncbi: $ncbi\n";
 	my $function=$ANOTATION{$ID};
+	#print "function: $function\n";	
+	#my $pause=<STDIN>;
 	$function=~s/;//g;
 	$function=~s/\|//g;
 	$function=~s/\&//g;
