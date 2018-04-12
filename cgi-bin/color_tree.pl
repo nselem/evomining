@@ -107,12 +107,17 @@ while (<LABELS>){
     
     ########################### ANTISMASH ##############
   
-       if(exists $hashANTISMASHid{$giA[1]}){
+       if(exists $hashANTISMASHid{$giA[1]} and !exists $hashMETCENTRAL{$giA[1]} ){
          $keyAM="$giA[1]"."|"."$giA[$#giA]";
 	  $antSMASHstring=$antSMASHstring.'"stroke-width:7; stroke:cyan" Individual '.$keyAM."\n";
           $antSMASHcircle=$antSMASHcircle. qq|"<circle style='fill:cyan;stroke:black' r='9'/>" I $keyAM\n|;
          
        }
+      if(exists $hashMETCENTRAL{$giA[1]} and exists $hashANTISMASHid{$giA[1]}){
+         $keyAM="$giA[1]"."|"."$giA[$#giA]";
+	 $antSMASHstring=$antSMASHstring.'"stroke-width:7; stroke:purple" Individual '.$keyAM."\n";
+         $antSMASHcircle=$antSMASHcircle. qq|"<circle style='fill:purple;stroke:black' r='9'/>" I $keyAM\n|;
+            	}
    
     ###########################FIN  ANTISMASH ##############
 
@@ -134,12 +139,10 @@ while (<LABELS>){
 	    ########################################
  
            if(exists $hashMETCENTRAL{$giA[1]} and !exists $hashANTISMASHid{$giA[1]}){
-  
-            $METcentral=$giA[1].'|'.$giA[$#giA];
-            print OUTLABELS "$_	$METcentral\n";
-             push(@QC, $METcentral);
-            #push(@QC, $ALL_ids);
-            }
+            	$METcentral=$giA[1].'|'.$giA[$#giA];
+	   	print OUTLABELS "$_	$METcentral\n";
+             	push(@QC, $METcentral);
+		}
 	     elsif($giA[0]=~/CENTRAL/){
 		print OUTLABELS "$_	$giA[0]|$giA[3]\n";
 		$keyCENT=$giA[0]."|".$giA[3];
@@ -165,15 +168,15 @@ close OUTLABELS;
 
 open (EDIT, ">>$OUTPUT_PATH/blast/seqf/tree/ornament.$numFile") or die $!;
 foreach my $cc (@QC){
-##print "siiiiii/$METcentral\n";
- print EDIT "\n";
- if($cc =~/\./ or $cc eq '' or $cc eq ' '){
-  #next;
- }
- print EDIT $NPc;
- print EDIT qq|"<circle style='fill:red;stroke:black' r='6'/>" I $cc|; ## circle for CEntral pathway
- print EDIT "\n";
-}
+	##print "siiiiii/$METcentral\n";
+ 	print EDIT "\n";
+ 	if($cc =~/\./ or $cc eq '' or $cc eq ' '){
+  		#next;
+ 		}
+ 		print EDIT $NPc;
+ 		print EDIT qq|"<circle style='fill:red;stroke:black' r='6'/>" I $cc|; ## circle for CEntral pathway
+ 		print EDIT "\n";
+		}
 print EDIT $antSMASHcircle;
 print EDIT $CENTRALcircle;
 close EDIT;
@@ -182,24 +185,25 @@ open (MAP, "$OUTPUT_PATH/blast/seqf/tree/ornament.$numFile") or die $!;
 open (OUTMAP, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.map") or die $!;
 
 while(<MAP>){
- chomp;
- #=================== extrae known recruitments para tener la lista y procesar evoMining predictions=========
- if($_ =~ /"<circle style='fill:blue;stroke:black' r='8'\/>" I /){
-   $stringKR=$_;
-#   print KR "-----$_\n";
-   $stringKR=~ s/"<circle style='fill:blue;stroke:black' r='8'\/>" I //;
-   @knownRecruitments=split(/ /,$stringKR);
-   foreach my $x (@knownRecruitments){
-     $hashKR{$x}=$x;
-     #print KR "$x\n";
-   }
+ 	chomp;
+ 	#=================== extrae known recruitments para tener la lista y procesar evoMining predictions=========
+ 	if($_ =~ /"<circle style='fill:blue;stroke:black' r='8'\/>" I /){
+   		$stringKR=$_;
+		#   print KR "-----$_\n";
+   		$stringKR=~ s/"<circle style='fill:blue;stroke:black' r='8'\/>" I //;
+   		@knownRecruitments=split(/ /,$stringKR);
+   		foreach my $x (@knownRecruitments){
+     			$hashKR{$x}=$x;
+     			#print KR "$x\n";
+   			}
 
- }
- #===================  FIN extrae known recruitments para tener la lista y procesar evoMining predictions=========
- $_ =~ s/"<circle style='fill:blue;stroke:black' r='8'\/>" I/"stroke-width:7; stroke:blue" Individual/;
- $_ =~ s/"<circle style='fill:red;stroke:black' r='6'\/>" I/"stroke-width:6; stroke:red" C/;
- print OUTMAP "$_\n";
-}
+ 		}
+
+	 #===================  FIN extrae known recruitments para tener la lista y procesar evoMining predictions=========
+	 $_ =~ s/"<circle style='fill:blue;stroke:black' r='8'\/>" I/"stroke-width:7; stroke:blue" Individual/;
+	 $_ =~ s/"<circle style='fill:red;stroke:black' r='6'\/>" I/"stroke-width:6; stroke:red" C/;
+	 print OUTMAP "$_\n";
+	}
 print OUTMAP $antSMASHstring;
 print OUTMAP $CENTRALstring;
 close OUTMAP;
@@ -209,50 +213,49 @@ open (KR, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.kn") or die $!;
 open (KRR, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.krr") or die $!;
 open (OUTKRR, ">$OUTPUT_PATH/blast/seqf/tree/$numFile.pruebaKR") or die $!;
  $numClades=-1;
- while($numClades<30){
- $numClades++;
-  foreach my $y (keys %hashKR){
-      @listClade = `nw_clade -c $numClades $OUTPUT_PATH/blast/seqf/tree/$numFile.tree $y|nw_labels -I -`; 
-      foreach my $x (@listClade){
-        chomp($x); 
+while($numClades<30){
+ 	$numClades++;
+  	foreach my $y (keys %hashKR){
+      		@listClade = `nw_clade -c $numClades $OUTPUT_PATH/blast/seqf/tree/$numFile.tree $y|nw_labels -I -`; 
+      		foreach my $x (@listClade){
+		        chomp($x); 
 	
-	if($x !~ /\|/){
-	  next  # si no es un gi|genoma # seria un NP KR
-	}
-	#print OUTKRR "$y->$numClades->$x->$cadenaKR\n";
+			if($x !~ /\|/){
+	 		 	next;  # si no es un gi|genoma # seria un NP KR
+			}
+			#print OUTKRR "$y->$numClades->$x->$cadenaKR\n";
 	
-	@gi_genoma=split (/\|/,$x);
-	print OUTKRR "$gi_genoma[1]\n";
-	$ID_genome="$gi_genoma[1]|$gi_genoma[$#gi_genoma]";
-	$hashIDT{$gi_genoma[1]}=$ID_genome;
-	#$hashIDT{$gi_genoma[1]}=$x;
+			@gi_genoma=split (/\|/,$x);
+			print OUTKRR "$gi_genoma[1]\n";
+			$ID_genome="$gi_genoma[1]|$gi_genoma[$#gi_genoma]";
+			$hashIDT{$gi_genoma[1]}=$ID_genome;
+			#$hashIDT{$gi_genoma[1]}=$x;
 	
-        if (!exists $hashMETCENTRAL{$gi_genoma[1]} and !exists $hashANTISMASHid{$gi_genoma[1]}){
-	   $cadenaKR=$hashIDT{$gi_genoma[1]}." ".$cadenaKR;
-	   $flagcadenaKR=1;#print OUTKRR "$gi_genoma[0]--$x--$hashMETCENTRAL{$gi_genoma[0]}--$hashANTISMASHid{$gi_genoma[0]}\n"; 
-	}
-	if(exists $hashMETCENTRAL{$gi_genoma[1]}){
-	   $cadenaKR='';
-	   delete $hashKR{$y};
-	   $flagcadenaKR=0;
-	   print OUTKRR "ES ROJOO:$gi_genoma[1]--$hashMETCENTRAL{$gi_genoma[1]}\n";
-	  last;
-	}
+        		if (!exists $hashMETCENTRAL{$gi_genoma[1]} and !exists $hashANTISMASHid{$gi_genoma[1]}){
+				   $cadenaKR=$hashIDT{$gi_genoma[1]}." ".$cadenaKR;
+				   $flagcadenaKR=1;#print OUTKRR "$gi_genoma[0]--$x--$hashMETCENTRAL{$gi_genoma[0]}--$hashANTISMASHid{$gi_genoma[0]}\n"; 
+					}
+			if(exists $hashMETCENTRAL{$gi_genoma[1]}){
+				   $cadenaKR='';
+				   delete $hashKR{$y};
+				   $flagcadenaKR=0;
+				   print OUTKRR "ES ROJOO:$gi_genoma[1]--$hashMETCENTRAL{$gi_genoma[1]}\n";
+				  last;
+				}
 	
 	
-      }#end clade
+     			 }#end clade
       
-      if($flagcadenaKR==1){#print OUTKRR "lalalalal$flagcadenaK--$cadenaKR\n";
-         print KRR qq|"<circle style='fill:#a5bb47;stroke:black' r='8'\/>" I $cadenaKR\n\n|;
-         print KR qq|"stroke-width:8; stroke:#a5bb47" Individual $cadenaKR\n|;
-        # print KR "-------$y\n";
-      } 
-       $cadenaKR='';
-       $flagcadenaKR=0;
-      #$cadenaKR=$y." ".$cadenaKR;
-   }#end foreach @listClade 
-    
- }#end while
+	      if($flagcadenaKR==1){#print OUTKRR "lalalalal$flagcadenaK--$cadenaKR\n";
+        		 print KRR qq|"<circle style='fill:#a5bb47;stroke:black' r='8'\/>" I $cadenaKR\n\n|;
+		         print KR qq|"stroke-width:8; stroke:#a5bb47" Individual $cadenaKR\n|;
+		        # print KR "-------$y\n";
+			      } 
+       		$cadenaKR='';
+       		$flagcadenaKR=0;
+      		#$cadenaKR=$y." ".$cadenaKR;
+	   }#end foreach @listClade 
+	 }#end while
  
   # print KR "$cadenaKR\n";
 close KR; 
@@ -271,6 +274,9 @@ system "mkdir $OUTPUT_PATH";
  
 `rm $OUTPUT_PATH/$numFile.idForcontext`;
  `perl $apacheCGIpath/blast/seqf/tree/zoom/ScaleSvg.pl $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg `;
+#system("cp $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg.new");
+my $special="NCPPB382s";
+ `perl -p -i.back -e 's{>\$}{ fill="violet">} if /$special/ && /sendtoDrawContext/' $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg.new`;
 #system("cp $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg.new");
 # system "cp $OUTPUT_PATH/blast/seqf/tree/$numFile.pp.svg.new $OUTPUT_PATH/$numFile.pp.svg.new";
 

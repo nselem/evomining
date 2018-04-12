@@ -70,4 +70,4 @@ RUN cpanm IO::Tee
 RUN cpanm Bio::SeqIO
 WORKDIR /var/www/html/EvoMining/cgi-bin
 #COPY . /var/www/html
-#CMD ["/var/www/run_apache.sh"]
+CMD ["perl", "/var/www/html/EvoMining/cgi-bin/startEvoMining.pl"]

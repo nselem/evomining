@@ -132,9 +132,7 @@ sub prepareDB{
 			print "\n\n"; 
 			#print "pause\n\n"; my $pause=<STDIN>;
 			print "Fasta files will be converted to evo files\n";
-			system("ls DB/$genome/*.faa \| while read line\; do echo perl  FaaToEvoNelly-modified.pl \$line RAST/$ids_name DB/$genome\; done");			## convert files
-			my $pause=<STDIN>;
-			system("ls DB/$genome/*.faa \| while read line\; do perl FaaToEvoNelly-modified.pl \$line RAST/$ids_name DB/$genome\;done");			## convert files
+			system("ls DB/$genome/*.faa \| while read line\; do echo perl  FaaToEvoNelly-modified.pl \$line RAST/$ids_name DB/$genome\; perl FaaToEvoNelly-modified.pl \$line RAST/$ids_name DB/$genome\;done");			## convert files
 			print "Files have been converted to EvoMining format\n\n";
 
 		#	system("for f in DB/$genome/*.faa\; do mv \$f \$f.evo\; done");
