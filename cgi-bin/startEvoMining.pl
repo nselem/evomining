@@ -86,6 +86,7 @@ sub printInputs{
 	print "Central DB: $central_db\n";
 	print "Natural Products: $natural_db\n";
 	print "Rast Ids: $rast_ids\n";
+	print "AntiSMASH: $smash_db\n";
 }
 
 #____________________________________________________________________________

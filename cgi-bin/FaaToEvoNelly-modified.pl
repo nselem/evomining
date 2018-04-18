@@ -21,7 +21,7 @@ chomp $temp;
 my @st=split(/\t/,$temp);
 my $orgName=$st[2];
 print "OrgName $orgName\n";
-print "text file $txtFile";
+#print "text file $txtFile";
 
 my %ANOTATION;
 ##########################
@@ -39,7 +39,7 @@ foreach my $line (<FILE>){
 #	$st[1]=~s/\./_/g;
 	$ANOTATION{$st[1]}=$st[7];
 	#print "$st[1]-> $st[7]\n";
-	print "$st[1]#$ANOTATION{$st[1]}!\n";
+	#print "$st[1]#$ANOTATION{$st[1]}!\n";
 	
 	}
 
@@ -48,7 +48,7 @@ my $out= Bio::SeqIO->new(-file=> ">$file\.evo",-format=> 'Fasta');
 
 while( my $seq = $seqio_obj->next_seq ) {
 	my $ID=$seq->id;
-	print "ID: $ID \n";
+	#print "ID: $ID \n";
 	my $genId=$ID;
 	$ID=~s/fig\|//g;
 	#print "ID: #$ID#\n";
