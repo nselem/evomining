@@ -37,7 +37,8 @@ Test your docker engine with the command:
 ### 2 Download EvoMining images from DockerHub  
 Pull evomining docker image from dockerHub with the following command:   
 `$ docker pull nselem/newevomining:latest  `    
-  
+if you already have EvoMining docker images skip this step.  
+
 ##### Important    
 `docker pull ` may be slow depending on your internet connection, at this step nselem/newevomining docker-image is being downloaded. Pull is run only once to download EvoMining images.
 
@@ -53,7 +54,11 @@ It is posible to check that EvoMining images is installed by typing:
 
 ### 3.1 Run evomining image
 Place yourself at your working directory.    
- `$ docker run -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 80:80 nselem/newevomining:latest /bin/bash`
+ `$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 80:80 nselem/newevomining:latest /bin/bash`
+
+sometimes the port 80 is bussy, on that case you can use other ports like 8080 or 8084:    
+`$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 8080:80 nselem/newevomining:latest /bin/bash`  
+`$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 8084:80 nselem/newevomining:latest /bin/bash`  
 
 ### 3.2 Set databases  
 Initialize EvoMining pipeline on the interactive shell of the EvoMining docker image.  
@@ -61,8 +66,7 @@ To run a default data included on docker distribution use:
 `# perl startEvoMining.pl`  
   
 To run EvoMining with your own databases use the modifiers:  
-`# perl startEvoMining.pl -g <genome-DB> -r <myRastIds> -c <central-DB> -n <natural-DB>`  
-
+`# perl startEvoMining.pl -g <genome-DB> -r <myRastIds> -c <central-DB> -n <natural-DB> -a <antismash_db>`   
 Or follow the example tutorial.    
 
 ### 3.3 View your results  
@@ -73,7 +77,10 @@ If you are running EvoMining on your local machine.
 or, if you are running EvoMining on a remote machine.   
 `http://<yourip>/html/EvoMining/index.html`  
 
-
+### 3.4 Common fails    
+Some computers does not have writing permision and does not let EvoMining run, go one level up of your directory and change permissions  
+`sudo chmod +x mydir`  
+`sudo chmod +w mydir`  
 ---   
   
 ### Curl installation
