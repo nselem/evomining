@@ -31,8 +31,8 @@ sub NewSvg{
 	my $HorTrans=shift;
 
 	if (-e "$file.new"){unlink("$file.new");}
-	open(ORIGINAL, "$file") or die "Couldn't open SVG file $!";
-	open(NEW, ">$file.new") or die "Couldn't open new SVG file $!";
+	open(ORIGINAL, "$file") or die "Couldn't open SVG file $file $!";
+	open(NEW, ">$file.new") or die "Couldn't open new SVG file $file.new $!";
 	
 	my $previous="";
 

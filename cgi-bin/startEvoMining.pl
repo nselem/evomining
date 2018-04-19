@@ -101,7 +101,7 @@ sub prepareDB{
 	my $ids_name="$genome\Rast.ids";
         
 	if ($smash_db ne "AntiSMASH_CF_peg_Annotation_FULL.txt") {
- 		system("cp $import_p/CyanosSMASH $moved_p/antiSmashClusteFinder/.");
+ 		system("cp $import_p/$smash_db $moved_p/antiSmashClusteFinder/.");
 		}
         if($genome ne "los17"){
                 if(!$rast_ids){
