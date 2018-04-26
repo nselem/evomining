@@ -210,7 +210,8 @@ foreach my $cc (@dat){
  }
  chdir "$OUTPUT_PATH/blast/seqf/";
  ###########weekend###############  
- system "/opt/quicktree/quicktree_1.1/bin/quicktree -in a -out t -boot 10000 $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2.stock > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
+ #system "/opt/quicktree/quicktree_1.1/bin/quicktree -in a -out t -boot 10000 $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2.stock > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
+ system "FastTree $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2 > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
  #########weekend######### 
  system "nw_distance -n $OUTPUT_PATH/blast/seqf/tree/$cc.tree > $OUTPUT_PATH/blast/seqf/tree/distance.$cc";
  $dist="distance.$cc";

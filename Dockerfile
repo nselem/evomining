@@ -49,8 +49,8 @@ RUN wget -O /opt/newick-utils-1.6.tar.gz http://cegg.unige.ch/pub/newick-utils-1
 RUN mkdir /opt/nw && tar -C /opt/nw -xzvf /opt/newick-utils-1.6.tar.gz && cd /opt/nw/newick-utils-1.6 && cp src/nw_* /usr/local/bin
 
 #_________________________________________________________________________________________________
-
-
+## Instaling FastTree
+RUN mkdir /opt/fasttree && wget -O /opt/fasttree/FastTree http://www.microbesonline.org/fasttree/FastTree && chmod +x /opt/fasttree/FastTree
 
 WORKDIR /var/www/
 #RUN mkdir /var/www/html
@@ -58,7 +58,7 @@ RUN chmod -R 777 /var/www/html
 
 ## EvoMining
  ######### PATHS ENVIRONMENT
-ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin
+ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin:/opt/fasttree
 RUN git clone https://github.com/nselem/EvoMining /var/www/html/EvoMining
 RUN chmod -R 777 /var/www/html/EvoMining
 RUN mv /var/www/html/EvoMining/enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
