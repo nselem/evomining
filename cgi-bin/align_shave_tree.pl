@@ -88,8 +88,15 @@ align();
 sub align{
 foreach my $c (@dat){
   
-    ###########weekend############### 
-    system("cat $OUTPUT_PATH/blast/$c.central >>$OUTPUT_PATH/blast/$c.concat.fasta");	 
+    ###########weekend###############
+	$grepCENTRAL=`grep -c '>CENTRAL' $OUTPUT_PATH/blast/$c.concat.fasta`; 
+	#print("grep -c \'>CENTRAL\' $OUTPUT_PATH/blast/$c.concat.fasta <br>"); 
+	#print "Central $grepCENTRAL result <br>";
+	if($grepCENTRAL<=1){   
+		#print "Entre <br>"; 
+		#print("cat $OUTPUT_PATH/blast/$c.central >>$OUTPUT_PATH/blast/$c.concat.fasta <br>");	 
+		system("cat $OUTPUT_PATH/blast/$c.central >>$OUTPUT_PATH/blast/$c.concat.fasta");	 
+		}
      system "/opt/muscle/muscle -in $OUTPUT_PATH/blast/$c.concat.fasta -out $OUTPUT_PATH/blast/$c.aln";
 
   if($c ne 'Submit' and $c ne '' and  $c ne ' '){ 
@@ -210,8 +217,9 @@ foreach my $cc (@dat){
  }
  chdir "$OUTPUT_PATH/blast/seqf/";
  ###########weekend###############  
- #system "/opt/quicktree/quicktree_1.1/bin/quicktree -in a -out t -boot 10000 $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2.stock > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
- system "FastTree $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2 > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
+# system "/opt/quicktree/quicktree_1.1/bin/quicktree -in a -out t -boot 10000 $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2.stock > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
+ #print "/opt/fasttree/FastTree $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2 > $OUTPUT_PATH/blast/seqf/tree/$cc.tree <br>";
+ system "/opt/fasttree/FastTree $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2 > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
  #########weekend######### 
  system "nw_distance -n $OUTPUT_PATH/blast/seqf/tree/$cc.tree > $OUTPUT_PATH/blast/seqf/tree/distance.$cc";
  $dist="distance.$cc";
