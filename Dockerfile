@@ -21,6 +21,8 @@ EXPOSE 80
 RUN apt-get install make && curl -L http://cpanmin.us | perl - App::cpanminus
 RUN cpanm SVG
 RUN cpanm Statistics::Basic
+RUN cpanm IO::Tee
+RUN cpanm Bio::SeqIO
 
 ###____________________________________________
 
@@ -55,22 +57,20 @@ WORKDIR /var/www/
 RUN chmod -R 777 /var/www/html
 
 ## EvoMining
- ######### PATHS ENVIRONMENT
-ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin:/opt/fasttree
 RUN git clone https://github.com/nselem/EvoMining /var/www/html/EvoMining
-RUN chmod -R 777 /var/www/html/EvoMining
 #--------------------------------------------------------------------
 # Installing GBlocks
-RUN tar -xzC /var/www/html/EvoMining/cgi-bin/Gblocks_Linux64_0.91b.tar.Z cgi-bin/ -xzC /opt
+RUN tar -xzC /var/www/html/EvoMining/cgi-bin/Gblocks_Linux64_0.91b.tar.Z 
 
 #----------------------------------------------------------------------------------
 RUN mv /var/www/html/EvoMining/enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
 RUN mv /var/www/html/EvoMining/apache2.conf /etc/apache2/
 RUN service apache2 start
+RUN chmod -R 777 /var/www/html/EvoMining
 
-RUN cp /opt/Gblocks_0.91b/Gblocks /var/www/html/EvoMining/cgi-bin/.
-RUN cpanm IO::Tee
-RUN cpanm Bio::SeqIO
+######### PATHS ENVIRONMENT
+ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin:/opt/fasttree
+
 WORKDIR /var/www/html/EvoMining/cgi-bin
 #COPY . /var/www/html
 CMD ["perl", "/var/www/html/EvoMining/cgi-bin/startEvoMining.pl"]

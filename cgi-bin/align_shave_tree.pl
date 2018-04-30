@@ -150,7 +150,7 @@ foreach my $cc (@dat){
  #chdir "$OUTPUT_PATH/blast/";
 my $dir=`pwd`;
   print LOG "Dir $dir\n/opt/Gblocks_0.91b/Gblocks ../$cc\gap.aln.out -b4=5 -b5=H -b3=10>LOG$cc.GBLOCks\n";
-    system("/var/www/html/EvoMining/cgi-bin/Gblocks ../$cc\gap.aln.out -b4=5 -b5=H -b3=10>../LOG$cc.GBLOCks");
+    system("/var/www/html/EvoMining/cgi-bin/Gblocks_0.91b/Gblocks ../$cc\gap.aln.out -b4=5 -b5=H -b3=10>../LOG$cc.GBLOCks");
    # system "sudo Gblocks $cc\gap.aln.out -b4=5 -b5=H -b3=10>LOG$cc.GBLOCks";
 # chdir "$OUTPUT_PATH/blast/seqf";
   #------------------------------------------------------------------------------
