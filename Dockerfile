@@ -60,7 +60,7 @@ RUN chmod -R 777 /var/www/html
 RUN git clone https://github.com/nselem/EvoMining /var/www/html/EvoMining
 #--------------------------------------------------------------------
 # Installing GBlocks
-RUN tar -xzC /var/www/html/EvoMining/cgi-bin/Gblocks_Linux64_0.91b.tar.Z 
+RUN zcat /var/www/html/EvoMining/cgi-bin/Gblocks_Linux64_0.91b.tar.Z | tar -xvf -
 
 #----------------------------------------------------------------------------------
 RUN mv /var/www/html/EvoMining/enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
