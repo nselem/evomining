@@ -35,8 +35,6 @@ RUN mkdir /opt/blast && curl ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+
  RUN wget -O /opt/muscle3.8.tar.gz http://www.drive5.com/muscle/downloads3.8.31/muscle3.8.31_i86linux64.tar.gz
  RUN mkdir /opt/muscle && tar -C /opt/muscle -xzvf /opt/muscle3.8.tar.gz && ln -s /opt/muscle/muscle3.8.31_i86linux64 /opt/muscle/muscle  
 ####___________________________________________________________________________________________________________________________________
-# Installing GBlocks
-RUN curl -SL http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_Linux64_0.91b.tar.Z | tar -xzC /opt 
 ####___________________________________________________________________________________________________________________________________
 RUN apt-get install -y build-essential
 ## Instaling Quicktree
@@ -61,6 +59,11 @@ RUN chmod -R 777 /var/www/html
 ENV PATH /opt/blast/bin:$PATH:/opt/muscle:/opt/quicktree/quicktree_1.1/bin:/opt/fasttree
 RUN git clone https://github.com/nselem/EvoMining /var/www/html/EvoMining
 RUN chmod -R 777 /var/www/html/EvoMining
+#--------------------------------------------------------------------
+# Installing GBlocks
+RUN tar -xzC /var/www/html/EvoMining/cgi-bin/Gblocks_Linux64_0.91b.tar.Z cgi-bin/ -xzC /opt
+
+#----------------------------------------------------------------------------------
 RUN mv /var/www/html/EvoMining/enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
 RUN mv /var/www/html/EvoMining/apache2.conf /etc/apache2/
 RUN service apache2 start
