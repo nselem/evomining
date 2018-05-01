@@ -206,7 +206,7 @@ close HASHESOUT;
 #sudo rm ../blast/pscp30012015.blast
 
 if(-e "$OUTPUT_PATH/blast/pscp$genomes.blast"){
-	print " I will use file: $OUTPUT_PATH/blast/pscp$genomes.blast\n");
+	print " I will use file: $OUTPUT_PATH/blast/pscp$genomes.blast\n";
 	}
 else{		
 	print "Indexando base de datos CENTRAL MET VS GENOMES...\n";

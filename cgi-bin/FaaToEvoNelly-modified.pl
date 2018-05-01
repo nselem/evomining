@@ -20,7 +20,7 @@ my $temp=`grep $genoId $rastFile`;
 chomp $temp;
 my @st=split(/\t/,$temp);
 my $orgName=$st[2];
-print "OrgName $orgName\n";
+#print "OrgName $orgName\n";
 #print "text file $txtFile";
 
 my %ANOTATION;
@@ -68,6 +68,7 @@ while( my $seq = $seqio_obj->next_seq ) {
 	$function=~s/;//g;
 	$function=~s/\|//g;
 	$function=~s/\&//g;
+	$orgname=~s/\(|\)/_/;
 	#print "$ID -> $function\n";
 #>gi|6666666.278093.1|6666666.278093|WC3796|Coenzyme F420-dependent N5,N10-methylene tetrahydromethanopterin reductase and related flavin-dependent oxidoreductases|James WC3796
         my $newId= "gi|".$genId."|".$st[0].".".$st[1]."|".$ncbi."|".$function."|".$orgName;

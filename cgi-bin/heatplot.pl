@@ -478,13 +478,15 @@ for(my $y=1; $y<=$#{$tabla2[1]}; $y++){ #columnas******
        }
       }
    }#end while
-  
+ 
 foreach my $x (keys %hashCP){
-       open (FASTA, ">>$OUTPUT_PATH/blast/$x.central") or die $!;
-       print FASTA "$hashCP{$x}\n";
-      # print " key $x *********$hashCP{$x}\n";
-       close FASTA;
-}
+	unless( -e "$OUTPUT_PATH/blast/$x.central") {
+       		open (FASTA, ">>$OUTPUT_PATH/blast/$x.central") or die $!;
+       		print FASTA "$hashCP{$x}\n";
+      		# print " key $x *********$hashCP{$x}\n";
+       		close FASTA;
+		}
+	}
    
    close FAST;
    
