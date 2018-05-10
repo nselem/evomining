@@ -77,8 +77,8 @@ If you are running EvoMining on your local machine.
 or, if you are running EvoMining on a remote machine.   
 `http://<yourip>/html/EvoMining/index.html`  
 
-### 3.4 Common fails    
-Some computers does not have writing permision and does not let EvoMining run, go one level up of your directory and change permissions  
+### 3.4 Common fails     
+Some computers does not have writing permision and does not let EvoMining run, go one level up of your directory and change permissions   
 `sudo chmod +x mydir`  
 `sudo chmod +w mydir`  
 ---   
