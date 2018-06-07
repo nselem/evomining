@@ -219,7 +219,8 @@ foreach my $cc (@dat){
  ###########weekend###############  
 # system "/opt/quicktree/quicktree_1.1/bin/quicktree -in a -out t -boot 10000 $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2.stock > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
  #print "/opt/fasttree/FastTree $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2 > $OUTPUT_PATH/blast/seqf/tree/$cc.tree <br>";
- system "/opt/fasttree/FastTree $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2 > $OUTPUT_PATH/blast/seqf/tree/$cc.tree";
+ system "/opt/fasttree/FastTree $OUTPUT_PATH/blast/$cc\gap.aln.out-gb2 > $OUTPUT_PATH/blast/seqf/tree/$cc.tree0";
+ system("nw_reroot $OUTPUT_PATH/blast/seqf/tree/$cc.tree0 \$(nw_labels $OUTPUT_PATH/blast/seqf/tree/$cc.tree0 |grep CENTRAL|sort -g |head -n1)  > $OUTPUT_PATH/blast/seqf/tree/$cc.tree");
  #########weekend######### 
  system "nw_distance -n $OUTPUT_PATH/blast/seqf/tree/$cc.tree > $OUTPUT_PATH/blast/seqf/tree/distance.$cc";
  $dist="distance.$cc";
