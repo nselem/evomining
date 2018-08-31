@@ -24,11 +24,11 @@ fill(\%LEAVES,$map); #Read colors on tree ids =genoemeId.GenId color->{Id1,Id2,.
 addGray(\%LEAVES,$tree);
 my %GENOMESNUM=fillGenomes(\%LEAVES);
 my %GENOME_NAME=GenomeNames(\%GENOMESNUM);
-#names('6666666.146852',\%GENOME_NAME);
-#exit;
+###########names('6666666.146852',\%GENOME_NAME);
 ## Change names on tree
 treeNames($tree,$num,\%GENOMESNUM,\%GENOME_NAME);
 exit;
+#exit;
 
 ################## Sub ##########################################	
 sub names{
@@ -59,7 +59,7 @@ sub GenomeNames{
 #			$line=~s/\r//;
 #			my @st=split(/\t/,$line);
 			$line=~s/\d*\t\s*(\d*)\.(\d*)\s*\t*//;
-			my $genome=$1.".".$2;
+			my $genome=$1."_".$2;
 			$GENOMES_NAME{$genome}=$line;
 		#	print "$line\n";
 		#	print "$genome->$GENOMES_NAME{$genome}\n";
@@ -74,9 +74,11 @@ sub fillGenomes{
 	my $LEAVES=shift;
 	foreach my $key(keys %$LEAVES){
 		foreach my $elem(@{$LEAVES->{$key}}){
-		#	print "$key:$elem\t";
-			if($elem=~/(\d*)\.(\d*)\.(\d*)/){
-				$genome=$1.".".$2;
+#			print "key $key:Elem:$elem\t";
+			if($elem=~/(\d*)_(\d*)_(\d*)/){
+				$genome=$1."_".$2;
+				
+				#$genome=~s/\./_/;
 				if(!exists $GENOMES{$genome}){
 					$GENOMES{$genome}=1;
 					}
@@ -84,7 +86,7 @@ sub fillGenomes{
 					$GENOMES{$genome}=$GENOMES{$genome}+1;
 					}
 				}
-			#	print "$genome\t$GENOMES{$genome}\n";
+#				print "$genome\t$GENOMES{$genome}\n";
 			}
 		}
 	return %GENOMES;
@@ -100,11 +102,14 @@ sub addGray{
 		my @st=split(':',$line);
 		foreach my $long(@st){
 			if($long=~/gi/){
+#				print "long $long\n";
 				my @st1=split(/\|/,$long);
 				$st1[1]=~s/(\d*)\.(\d*)\.(\d*)//;
 				my $name=$1.".".$2.".".$3;
-				#print "$name";
-				my $genome=$1.".".$2;
+				my $genome=$1."_".$2;
+				$name=~s/\./_/g;
+#				print "Name $name Genome $genome\n";
+#				print "pause"; my $pause=<STDIN>; 
 				my ($type,$color)=getColor($name);	
 				if($color =~/Gray/){
 					push(@{$LEAVES->{'Gray'}},$name);
@@ -115,21 +120,21 @@ sub addGray{
 		}
 	close TREE;
 	}
-#---------------------------------
+#-------___________--------------------------
 sub treeNames{
 	my $tree=shift;
 	my $num=shift;
 	my $genomeCopies=shift;
 	my $genomeName=shift;
 
-open(TREE,$tree) or die "No pude abrir $tree \n $!";
-open (FILE,">$OUTPUT_PATH/blast/seqf/tree/$num.csv") or die $!;
-print FILE"Id\tMetabolism\tMetabolism__colour\tMetabolism__shape\tGenome\tFunction\tCopies\tCopies___colour\tCopies__shape\n";
-open (TREE2,">$OUTPUT_PATH/blast/seqf/tree/$num.nwk") or die $!;
+	open(TREE,$tree) or die "No pude abrir $tree \n $!";
+	open (FILE,">$OUTPUT_PATH/blast/seqf/tree/$num.csv") or die $!;
+	print FILE"Id\tMetabolism\tMetabolism__colour\tMetabolism__shape\tGenome\tFunction\tCopies\tCopies___colour\tCopies__shape\n";
+	open (TREE2,">$OUTPUT_PATH/blast/seqf/tree/$num.nwk") or die $!;
 
-foreach my $line (<TREE>){
+	foreach my $line (<TREE>){
 	chomp $line;
-#	print $line;
+	#print "Line $line\n";
 	my @st=split(':',$line);
 	my $newtree="";
 	foreach my $long(@st){
@@ -137,15 +142,15 @@ foreach my $line (<TREE>){
 		my $color="";
 		my $type="";
 		my $genome="";
-		#print "$long\n";
+#		print "$long\n";
 		if($long=~/gi/){
 			my @st1=split(/\|/,$long);
 			$st1[1]=~s/(\d*)\.(\d*)\.(\d*)//;
-			$name=$1.".".$2.".".$3;
-			$genome=$1.".".$2;
+			$name=$1."_".$2."_".$3;
+			$genome=$1."_".$2;
 			#print "$name\t$st1[4]\n\n";
 			$st1[0]=~s/gi//;
-			$newtree.=$name.":";
+			$newtree.=$st1[0].$name.":";
 #			$st1[4]=~s/\_/ /g;	
 			($type,$color)=getColor($name);	
 			my $nombre=names($genome,$genomeName);	
@@ -155,13 +160,14 @@ foreach my $line (<TREE>){
 			}
 		elsif($long=~/CENTRAL/ ){
 			my @st1=split(/\|/,$long);
+#			my @st2=split();
 			$name=$st1[0]."_".$st1[2];
+			$newtree.=$name.":";
 	                $name=~s/\(//g;	
 	                $name=~s/\d*\.\d*,CENTRAL/CENTRAL/g;	
 			#print "$name\t$st1[2]\n\n";
 #			($type,$color)=getColor($name);		
-			$newtree.="(".$name.":";
-			$st1[2]=~s/\_/ /g;	
+#			$st1[2]=~s/\_/ /g;	
 			print FILE "$name\tSeed Enzyme\tOrange\tcircle\t$st1[3]\tFunction\tCopies\tCopies___colour\tcircle\n";
 			#print FILE "$name\t$st1[2]\n";	
 			}
@@ -178,8 +184,12 @@ foreach my $line (<TREE>){
 			}
 		else{
 			$newtree.=$long.":";
+			}
+#		print "$newtree\n\n";
+	#	print "pausa"; 
+#		my $ST=<STDIN>;
 		}
-		}
+	chop $newtree;
 	print TREE2 $newtree;
 	}
 close TREE;
@@ -240,7 +250,8 @@ foreach my $line(<FILE>){
 			#chomp $element;
 			$element=~s/(\d*)\.(\d*)\.(\d*)_(\w*)//;
 			$element=$1.".".$2.".".$3;
-#			print "Elem $element";
+			$element=~s/\./_/g;
+#			print "Elem $element\n";
 			push(@rename,$element);
 			#if($key=~/cyan/){
 #				print "$line\n";
