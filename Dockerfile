@@ -40,15 +40,16 @@ RUN mkdir /opt/nw && tar -C /opt/nw -xzvf /opt/newick-utils-1.6.tar.gz && cd /op
 ## Instaling FastTree
 RUN mkdir /opt/fasttree && wget -O /opt/fasttree/FastTree http://www.microbesonline.org/fasttree/FastTree && chmod +x /opt/fasttree/FastTree
 #--------------------------------------------------------------------
-# Installing GBlocks
-RUN zcat /var/www/html/EvoMining/cgi-bin/Gblocks_Linux64_0.91b.tar.Z | tar -xvf -
-
 WORKDIR /var/www/
 #RUN mkdir /var/www/html
 RUN chmod -R 777 /var/www/html
-
 ## EvoMining
 RUN git clone https://github.com/nselem/EvoMining /var/www/html/EvoMining
+#--------------------------------------------------------------------
+# Installing GBlocks
+RUN zcat /var/www/html/EvoMining/cgi-bin/Gblocks_Linux64_0.91b.tar.Z | tar -xvf -
+
+
 
 #----------------------------------------------------------------------------------
 RUN mv /var/www/html/EvoMining/enable-var-www-html-htaccess.conf /etc/apache2/conf-enabled/
