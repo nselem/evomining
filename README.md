@@ -36,17 +36,17 @@ Test your docker engine with the command:
   
 ### 2 Download EvoMining images from DockerHub  
 Pull evomining docker image from dockerHub with the following command:   
-`$ docker pull nselem/newevomining:latest  `    
+`$ docker pull nselem/evomining:latest  `    
 if you already have EvoMining docker images skip this step.  
 
 ##### Important    
-`docker pull ` may be slow depending on your internet connection, at this step nselem/newevomining docker-image is being downloaded. Pull is run only once to download EvoMining images.
+`docker pull ` may be slow depending on your internet connection, at this step nselem/evomining docker-image is being downloaded. Pull is run only once to download EvoMining images.
 
 It is posible to check that EvoMining images is installed by typing:  
 `$ docker images`    
 > REPOSITORY           |TAG           |IMAGE ID        |CREATED       |SIZE     |
 >----------------------|--------------|----------------|--------------|---------|
-> nselem/newevomining  | latest       |  954ca43b8a23  |4 months ago  | 2.58GB  |
+> nselem/evomining  | latest       |  954ca43b8a23  |4 months ago  | 2.58GB  |
    
 ---   
    
@@ -54,11 +54,11 @@ It is posible to check that EvoMining images is installed by typing:
 
 ### 3.1 Run evomining image
 Place yourself at your working directory.    
- `$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 80:80 nselem/newevomining:latest /bin/bash`
+ `$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 80:80 nselem/evomining:latest /bin/bash`
 
 sometimes the port 80 is bussy, on that case you can use other ports like 8080 or 8084:    
-`$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 8080:80 nselem/newevomining:latest /bin/bash`  
-`$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 8084:80 nselem/newevomining:latest /bin/bash`  
+`$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 8080:80 nselem/evomining:latest /bin/bash`  
+`$ docker run --rm -i -t -v $(pwd):/var/www/html/EvoMining/exchange -p 8084:80 nselem/evomining:latest /bin/bash`  
 
 ### 3.2 Set databases  
 Initialize EvoMining pipeline on the interactive shell of the EvoMining docker image.  
