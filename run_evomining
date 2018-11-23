@@ -1,0 +1,90 @@
+#!/bin/bash
+######################################################################################################
+# author nselem84@gmail.com
+# _________________________________________________________________________________________________
+# usage
+# ./run_corason -h   
+#	shows help menu
+#  
+# ./run_corason <queryEnzyme> <gbks_directory> <referenceBGC> <genomicVicinitySize>
+#  queryEnzyme			Fasta file with aminoacid sequence of the query enzyme  
+#
+#  gbks_directory 		Directory with genomes or BGCs in gbk format  
+#
+#  referenceBGC			File name of a gbk file that contains a BGC or genome 
+#				where the query enzyme belong.
+#
+#  genomicVicinitySize 		Optional, size of the genomic contexts. Default 20 genes (10 at each side)
+#
+#   __________________________________________________________________________________________________
+#
+#  docker run --volume --volume --volume nselem/corason -g -q queryEnzyme -s -o
+#
+#  QUERY_FILE   query enzyme   
+#  INPUT_FILE   reference cluster (relative path)
+#  GENOME_DIR   Genome gbks directory 
+# 
+#
+#  Pendientes  
+#  Dentro del docker llamar GENOME al GENOME_DIR
+#  Convertir de gbk a rast format
+#  poner ".query al enzyme file"
+#  Tomar el nombre del reference file 
+#  
+#
+########################################################################################################
+
+if [[ $# -eq 0 ||  $1 == "-h" ||  $1 == "--help" ]]; then
+	docker run \
+	--detach=false \
+	--rm \
+	nselem/corason corason.pl\
+    	$@
+else
+	set -o errexit
+	set -o nounset
+
+	function realpath() {
+    	echo $(readlink -f $1 2>/dev/null || python -c "import sys; import os; print(os.path.realpath(os.path.expanduser(sys.argv[1])))" $1)
+	}
+
+	# handle input query file (Only one enzyme in fasta)
+	if [[ ! -f ${1} ]]; then echo "File $1 does not exists"; exit ;fi
+	readonly QUERY_FILE=$(basename $1)
+	readonly QUERY_DIR=$(dirname $(realpath $1))
+#	echo "input query file: ${QUERY_FILE}"
+#	echo "input query dir: ${QUERY_DIR}"
+	shift
+
+	# handle genomic database
+	if [[ ! -d ${1} ]]; then echo "Directory $1 does not exists";exit;fi
+	readonly GENOME_DIR=$(realpath $1)
+#	echo "input gbk dir: ${GENOME_DIR}"
+	shift
+
+	# handle input file where the query belongs (genome file in BGCs)
+	if [[ ! -f ${1} ]]; then echo "File $1 does not exists";exit;fi
+	readonly INPUT_FILE=$(basename $1)
+	readonly INPUT_DIR=$(dirname $(realpath $1))
+#	echo "input special cluster dir: ${INPUT_DIR}/${INPUT_FILE}"
+	if [[ ${INPUT_DIR} != ${GENOME_DIR} ]]; then 
+		echo "${INPUT_FILE} must be located in ${GENOME_DIR}"
+		echo "The program will exit now, please move ${INPUT_FILE} to ${GENOME_DIR}"
+		exit
+	fi
+	shift
+
+	OUTPUT_DIR=${PWD}
+	# Links within the container
+	readonly CONTAINER_SRC_DIR=/usr/src/CORASON
+	readonly CONTAINER_DST_DIR=/home/output
+
+
+	#if [ ${INPUT_FILE} ${OUTPUT_FILE} ]; then
+	if [ ! -z ${INPUT_FILE} ] ; then
+		echo "corason is now running"
+		echo docker run --volume ${QUERY_DIR}/${QUERY_FILE}:${CONTAINER_DST_DIR}/${QUERY_FILE}:ro --volume ${INPUT_DIR}:${CONTAINER_DST_DIR}/CORASON_GENOMES:ro --volume ${OUTPUT_DIR}:${CONTAINER_DST_DIR}:rw --detach=false --rm nselem/corason corason.pl -g -q ${QUERY_FILE} -s ${INPUT_FILE} $@
+
+	fi
+fi
+
