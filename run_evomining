@@ -6,7 +6,7 @@
 # ./run_corason -h   
 #	shows help menu
 #  
-# ./run_corason <queryEnzyme> <gbks_directory> <referenceBGC> <genomicVicinitySize>
+# ./run_evomining <queryEnzyme> <gbks_directory> <referenceBGC> <genomicVicinitySize>
 #  queryEnzyme			Fasta file with aminoacid sequence of the query enzyme  
 #
 #  gbks_directory 		Directory with genomes or BGCs in gbk format  
