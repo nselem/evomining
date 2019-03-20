@@ -1,5 +1,7 @@
 # Evomining docker image:
 ========================================
+This is a quick guide but further information can be found at https://github.com/nselem/EvoMining/wiki  
+
 ## EvoMining Installation guide
 
 1. Install docker engine   
