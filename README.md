@@ -5,7 +5,7 @@ This is a quick guide but further information can be found at https://github.com
 ## EvoMining Installation guide
 
 1. Install docker engine   
-2. Download nselem/newevomining docker image  
+2. Download nselem/evomining docker image  
 3. Run EvoMining    
 
 Follow the steps, and type the commands into your terminal, do not type $.  
@@ -74,10 +74,10 @@ Or follow the example tutorial.
 ### 3.3 View your results  
 Open EvoMining web interface and follow the steps until the tree visualization.  
 If you are running EvoMining on your local machine.   
-`http://localhost/html/EvoMining/index.html`   
+`http://localhost/EvoMining/html/index.html`   
    
 or, if you are running EvoMining on a remote machine.   
-`http://<yourip>/html/EvoMining/index.html`  
+`http://<yourip>/EvoMining/html/index.html`  
 
 ### 3.4 Common fails  
   
