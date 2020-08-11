@@ -425,8 +425,10 @@ sub treeNames{
 		my $type="";
 		my $genome="";
 #		print "$long\n";
-		if($long=~/gi/){
+		if($long=~/gi/ and !($long=~/CENTRAL/)){
+	#		print "long gi $long <br>";
 			my @st1=split(/\|/,$long);
+			chomp $long;
 			$st1[1]=~s/(\d*)\.(\d*)\.(\d*)//;
 			$name=$1."_".$2."_".$3;
 			$genome=$1."_".$2;
@@ -436,11 +438,16 @@ sub treeNames{
 #			$st1[4]=~s/\_/ /g;	
 			($type,$color)=getColor($name);	
 			my $nombre=names($genome,$genomeName);	
-			my $copias=copies($genome,$genomeCopies);	
-			print FILE "$name\t$type\t$color\tcircle\t$nombre\t$st1[4]\t$copias\n";
+			my $copias=copies($genome,$genomeCopies);
+			$nombre=~s/\r//g;
+			my $function=$st1[4];	
+			$function=~s/\r//g;
+			print FILE "$name\t$type\t$color\tcircle\t$nombre\t$function\t$copias\n";
+			#print "$name#$type#$color#circle#$nombre#$function#$copias<br>";
 			#print FILE "$name\t$st1[4]\n";	
 			}
 		elsif($long=~/CENTRAL/ ){
+			print "Long $long <br>";
 			my @st1=split(/\|/,$long);
 #			my @st2=split();
 			$name=$st1[0]."_".$st1[2];
