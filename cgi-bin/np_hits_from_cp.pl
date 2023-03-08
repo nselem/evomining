@@ -405,17 +405,22 @@ chomp;
 open(NPDB, "NPDB/$np_db")or die $!;
  $si=0;  
  while($line2=<NPDB>){
+	#print "line2inicio$line2!-final\n";
   chomp($line2);
+	$line2=~s/\r//g;
     if ($line2 =~ />/){
      #$header=$line2;
      $line2 =~ s/>//;
      
        if(exists $hashUniq{$line2}){
            print OUTFASTA ">$line2\n";
-	   $si=1;        
+	   $si=1;
+ 	 #  print "si \n";       
        }
        else{
          $si=0;
+	#print "no \n";
+	#foreach my $key (keys %hashUniq){print "key#$key# line2#$line2# \n";print "Valor#$hashUniq{$key}#finALVALOR \n";}
        }
     }
     else{
