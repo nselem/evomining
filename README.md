@@ -81,9 +81,15 @@ or, if you are running EvoMining on a remote machine.
 
 ### 3.4 Common fails  
   
-Some computers does not have writing permision and does not let EvoMining run, go one level up of your directory and change permissions    
-`sudo chmod +x mydir`   
-`sudo chmod +w mydir`   
+Some computers do not have writing permission and do not let EvoMining run, go one level up of your directory and change permissions 
+`mkdir mydir`  
+`sudo chmod +x mydir`    
+`sudo chmod +w mydir`    
+`cd mydir`  
+and then inside mydir run EvoMining.  
+Also inside the docker you can change permissions as:  
+`chmod 770 ../exchange`  
+
 
 ---   
   
